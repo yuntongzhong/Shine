@@ -12,14 +12,13 @@ import com.zyt.shine.R;
  * 用于展示动态的Fragment
  */
 public class NewsFragment extends Fragment {
-
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View newsLayout = inflater.inflate(R.layout.news_layout, container,
+		View newsLayout = inflater.inflate(R.layout.news_fragment, container,
 				false);
 		return newsLayout;
 	}
+
 
 }

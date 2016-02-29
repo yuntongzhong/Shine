@@ -11,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -177,17 +178,18 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**headlayout中的监听*/
-    public void headLyoutListener(View v) {
+    public void toLoginActivity(View v) {
         int id = v.getId();
         switch (id) {
             case R.id.head_portrait:
-                Intent intent=new Intent(MainActivity.this,LoginActivity.class);
+                Intent intent=new Intent(MainActivity.this,LoginActivity_.class);
                 startActivity(intent);
+                //跳转到另一个activity时，关闭侧滑菜单
+                drawerLayout.closeDrawers();
                 break;
             default:
                 break;
         }
-
     }
 
 
@@ -218,7 +220,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        // DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
@@ -230,7 +231,6 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-
         return true;
     }
 
@@ -239,13 +239,13 @@ public class MainActivity extends AppCompatActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()){
+            case R.id.action_settings:
+               break;
+            default:
+                break;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -302,7 +302,7 @@ public class MainActivity extends AppCompatActivity
                   messageText.setTextColor(Color.WHITE);
                 if (messageFragment == null) {
                     // 如果MessageFragment为空，则创建一个并添加到界面上
-                    messageFragment = MessageFragment.getInstance();
+                    messageFragment = new MessageFragment();
                     //transaction.add(0, messageFragment);
                     transaction.add(R.id.content, messageFragment);
 

@@ -16,7 +16,7 @@ public class SettingFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View settingLayout = inflater.inflate(R.layout.setting_layout,
+		View settingLayout = inflater.inflate(R.layout.setting_fragment,
 				container, false);
 		return settingLayout;
 	}
