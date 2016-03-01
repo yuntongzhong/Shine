@@ -11,7 +11,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -131,15 +130,12 @@ public class MainActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         ImmersedStatusbarUtils.initAfterSetContentView(this, toolbar);
-
         setSupportActionBar(toolbar);
         // 初始化布局元素
         initViews();
         fragmentManager = getSupportFragmentManager();
         // 第一次启动时选中第1个tab
         setTabSelection(0);
-
-
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -182,10 +178,11 @@ public class MainActivity extends AppCompatActivity
         int id = v.getId();
         switch (id) {
             case R.id.head_portrait:
+                drawerLayout.closeDrawers();
                 Intent intent=new Intent(MainActivity.this,LoginActivity_.class);
                 startActivity(intent);
                 //跳转到另一个activity时，关闭侧滑菜单
-                drawerLayout.closeDrawers();
+
                 break;
             default:
                 break;
@@ -234,22 +231,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
 
-        switch (item.getItemId()){
-            case R.id.action_settings:
-               break;
-            default:
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -280,8 +262,6 @@ public class MainActivity extends AppCompatActivity
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
-    //  AppCompatImageView
-
 
     /**
      * 根据传入的index参数来设置选中的tab页。
@@ -387,8 +367,5 @@ public class MainActivity extends AppCompatActivity
         if (settingFragment != null) {
             transaction.hide(settingFragment);
         }
-
     }
-
-
 }
