@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.zyt.shine.R;
-import com.zyt.shine.view.ImageCycleView;
+import com.zyt.shine.view.AutoPlayViewPage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,29 +17,29 @@ import java.util.List;
  * 用于展示消息的Fragment
  */
 public class MessageFragment extends Fragment {
-    private ImageCycleView mImageCycleView;
+    private AutoPlayViewPage mImageCycleView;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View messageLayout = inflater.inflate(R.layout.message_fragment,
                 container, false);
-        mImageCycleView = (ImageCycleView) messageLayout.findViewById(R.id.icv_topView);
-        List<ImageCycleView.ImageInfo> list = new ArrayList<ImageCycleView.ImageInfo>();
+        mImageCycleView = (AutoPlayViewPage) messageLayout.findViewById(R.id.icv_topView);
+        List<AutoPlayViewPage.ImageInfo> list = new ArrayList<AutoPlayViewPage.ImageInfo>();
 
         //res图片资源
-        list.add(new ImageCycleView.ImageInfo(R.drawable.b, "扑树又回来啦！再唱经典老歌引万人大合唱", ""));
-        list.add(new ImageCycleView.ImageInfo(R.drawable.c, "揭秘北京电影如何升级", ""));
-        list.add(new ImageCycleView.ImageInfo(R.drawable.d, "乐视网TV版大派送", ""));
-        list.add(new ImageCycleView.ImageInfo(R.drawable.e, "热血屌丝的反杀", ""));
+        list.add(new AutoPlayViewPage.ImageInfo(R.drawable.b, "扑树又回来啦！再唱经典老歌引万人大合唱", ""));
+        list.add(new AutoPlayViewPage.ImageInfo(R.drawable.c, "揭秘北京电影如何升级", ""));
+        list.add(new AutoPlayViewPage.ImageInfo(R.drawable.d, "乐视网TV版大派送", ""));
+        list.add(new AutoPlayViewPage.ImageInfo(R.drawable.e, "热血屌丝的反杀", ""));
         initdata(list);
         return messageLayout;
     }
 
 
-    void initdata(List<ImageCycleView.ImageInfo> list) {
-        mImageCycleView.loadData(list, new ImageCycleView.LoadImageCallBack() {
+    void initdata(List<AutoPlayViewPage.ImageInfo> list) {
+        mImageCycleView.loadData(list, new AutoPlayViewPage.LoadImageCallBack() {
             @Override
-            public ImageView loadAndDisplay(ImageCycleView.ImageInfo imageInfo) {
+            public ImageView loadAndDisplay(AutoPlayViewPage.ImageInfo imageInfo) {
 
                 //本地图片
                 ImageView imageView = new ImageView(getContext());

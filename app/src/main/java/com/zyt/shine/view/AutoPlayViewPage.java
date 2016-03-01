@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * Created by zyt on 2016/2/29.
  */
-public class ImageCycleView extends FrameLayout {
+public class AutoPlayViewPage extends FrameLayout {
     /**
      * 上下文
      */
@@ -35,9 +35,7 @@ public class ImageCycleView extends FrameLayout {
      */
     private ImageCycleViewPager mViewPager;
     /**
-     * 数据集合
-     * Map<String,String> map=new HashMap<String, String>();
-     * map.put("","");
+     * 数据源
      */
     private List<ImageInfo> data = new ArrayList<ImageInfo>();
     /**
@@ -54,11 +52,12 @@ public class ImageCycleView extends FrameLayout {
      */
     private int mCount = 0;
     /**
-     * 指示器的尺寸（单位：dp）
+     * 指示器的尺寸（单位：PX）
+     * 后面会将px转成dp
      */
     private float indicationSize = 6.0f;
     /**
-     * 指示器的左右边距（单位：dp）
+     * 指示器的左右边距（单位：PX）
      */
     private float indicationMargin = 1.5f;
     /**
@@ -71,12 +70,12 @@ public class ImageCycleView extends FrameLayout {
     private TextView mText;
 
 
-    public ImageCycleView(Context context) {
+    public AutoPlayViewPage(Context context) {
         super(context);
         init(context);
     }
 
-    public ImageCycleView(Context context, AttributeSet attrs) {
+    public AutoPlayViewPage(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
@@ -93,8 +92,6 @@ public class ImageCycleView extends FrameLayout {
 
     /**
      * 初始化view控件
-     *
-     * @author 代凯男
      */
     private void initView() {
         View.inflate(mContext, R.layout.auto_play_viewpage_view, this);
@@ -112,12 +109,12 @@ public class ImageCycleView extends FrameLayout {
      */
     private boolean isAutoCycle = true;
     /**
-     * 自动轮播时间间隔默认5秒
+     * 自动轮播时间间隔默认3秒
      */
     private long mCycleDelayed = 3000;
 
     /**
-     * 设置是否自动无限轮播
+     * 设置自动轮播时间间隔
      *
      * @param delayed 自动轮播时间间隔
      */

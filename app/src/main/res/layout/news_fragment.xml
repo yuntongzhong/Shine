@@ -24,7 +24,7 @@
             android:textSize="20sp" />
     </LinearLayout>
 
-    <com.zyt.shine.view.ImageCycleView
+    <com.zyt.shine.view.AutoPlayViewPage
         android:id="@+id/icv_topView"
         android:layout_width="match_parent"
         android:layout_height="150dip" />
