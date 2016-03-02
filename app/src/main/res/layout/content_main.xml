@@ -1,21 +1,25 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <!--app:layout_behavior="@string/appbar_scrolling_view_behavior" tools:showIn="@layout/app_bar_main"-->
+
     <FrameLayout
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/nav_bottom"></FrameLayout>
+        android:layout_above="@+id/line"
+        android:layout_alignParentTop="true"></FrameLayout>
 
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_above="@+id/nav_bottom"
+        android:background="@color/darkgrey" />
     <LinearLayout
         android:id="@+id/nav_bottom"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
-        android:background="?attr/colorPrimary"
         android:orientation="horizontal">
 
         <RelativeLayout
@@ -31,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/message_text"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/message_unselected" />
+                android:src="@mipmap/message_unselected" />
 
             <TextView
                 android:id="@+id/message_text"
@@ -56,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/contacts_text"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/contacts_unselected" />
+                android:src="@mipmap/contacts_unselected" />
 
             <TextView
                 android:id="@+id/contacts_text"
@@ -82,7 +86,7 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/news_text"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/news_unselected" />
+                android:src="@mipmap/news_unselected" />
 
             <TextView
                 android:id="@+id/news_text"
@@ -108,7 +112,7 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/setting_text"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/setting_unselected" />
+                android:src="@mipmap/setting_unselected" />
 
             <TextView
                 android:id="@+id/setting_text"

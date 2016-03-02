@@ -39,7 +39,7 @@
                 <View
                     android:id="@+id/v_dot0"
                     style="@style/dot_style"
-                    android:background="@drawable/dot_focused" />
+                    />
 
                 <View
                     android:id="@+id/v_dot1"
@@ -71,7 +71,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/contacts_selected" />
+            android:src="@mipmap/contacts_selected" />
 
         <TextView
             android:layout_width="wrap_content"

@@ -16,54 +16,64 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="0dp"
         android:background="@drawable/circle" />
-    android:background="@drawable/fillet_shape"
 
-    <EditText
+    <android.support.design.widget.TextInputLayout
         android:id="@+id/account_number"
         android:layout_width="match_parent"
-        android:layout_height="40dip"
-        android:layout_centerVertical="true"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/password"
         android:layout_marginLeft="30dip"
         android:layout_marginRight="30dip"
-        android:layout_marginTop="15dip"
-        android:background="@drawable/qqnum_edit"
-        android:hint="用户名/手机号/邮箱"
-        android:paddingLeft="10dip" />
+        android:layout_marginTop="15dip">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="用户名/手机号/邮箱"
+            android:maxLength="500"
+            android:textSize="13sp" />
+    </android.support.design.widget.TextInputLayout>
+
+    <!--<EditText-->
+    <!--android:id="@+id/account_number"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="40dip"-->
+    <!--android:layout_centerVertical="true"-->
+    <!--android:layout_marginLeft="30dip"-->
+    <!--android:layout_marginRight="30dip"-->
+    <!--android:layout_marginTop="15dip"-->
+    <!--android:background="@drawable/qqnum_edit"-->
+    <!--android:hint="用户名/手机号/邮箱"-->
+    <!--android:paddingLeft="10dip" />-->
 
 
-    <EditText
+    <android.support.design.widget.TextInputLayout
         android:id="@+id/password"
         android:layout_width="match_parent"
-        android:layout_height="40dip"
-        android:layout_below="@+id/account_number"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:layout_marginLeft="30dip"
-        android:layout_marginRight="30dip"
-        android:background="@drawable/qq_password_edit"
-        android:hint="密码"
-        android:inputType="textPassword"
-        android:paddingLeft="10dip" />
+        android:layout_marginRight="30dip">
 
-
-    <ImageButton
-        android:id="@+id/qqListIndicator"
-        android:layout_width="22dip"
-        android:layout_height="20dip"
-        android:layout_alignBottom="@+id/account_number"
-        android:layout_alignRight="@+id/account_number"
-        android:layout_marginBottom="8dip"
-        android:layout_marginRight="3dip"
-        android:background="@drawable/indicator_down" />
-
-    <ImageButton
-        android:id="@+id/delete_button_edit"
-        android:layout_width="13dip"
-        android:layout_height="13dip"
-        android:layout_alignBottom="@+id/account_number"
-        android:layout_marginBottom="10dip"
-        android:layout_marginRight="3dip"
-        android:layout_toLeftOf="@id/qqListIndicator"
-        android:background="@drawable/delete_button_edit"
-        android:visibility="gone" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="密码"
+            android:inputType="textPassword"
+            android:maxLength="500"
+            android:textSize="13sp" />
+    </android.support.design.widget.TextInputLayout>
+    <!--<EditText-->
+    <!--android:id="@+id/password"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="40dip"-->
+    <!--android:layout_below="@+id/account_number"-->
+    <!--android:layout_marginLeft="30dip"-->
+    <!--android:layout_marginRight="30dip"-->
+    <!--android:background="@drawable/qq_password_edit"-->
+    <!--android:hint="密码"-->
+    <!--android:inputType="textPassword"-->
+    <!--android:paddingLeft="10dip" />-->
 
     <Button
         android:id="@+id/login_button"
@@ -73,9 +83,9 @@
         android:layout_alignRight="@id/account_number"
         android:layout_below="@+id/password"
         android:layout_marginTop="20dp"
-        android:background="@drawable/login_button_back"
+        android:background="@drawable/btn_selector"
         android:text="登录"
-        android:textColor="@android:color/white" />
+        android:textColor="@drawable/bt_text_color" />
 
     <TextView
         android:id="@+id/fetchPassword"
@@ -86,8 +96,8 @@
         android:layout_marginLeft="45dip"
         android:gravity="bottom"
         android:text="找回密码"
-        android:textColor="#333355"
-        android:textSize="20sp" />
+        android:textColor="@drawable/bt_text_color"
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/registQQ"
@@ -99,8 +109,8 @@
         android:layout_marginTop="5dip"
         android:gravity="bottom"
         android:text="注册账号"
-        android:textColor="#333355"
-        android:textSize="20sp" />
+        android:textColor="@drawable/bt_text_color"
+        android:textSize="16sp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -111,19 +121,5 @@
         android:gravity="bottom"
         android:text="|"
         android:textSize="20sp" />
-
-    <ListView
-        android:id="@+id/loginQQList"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/registQQ"
-        android:layout_alignLeft="@id/account_number"
-        android:layout_alignRight="@id/account_number"
-        android:layout_below="@id/account_number"
-        android:divider="#aaaaaa"
-        android:dividerHeight="0px"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:visibility="gone" />
 
 </RelativeLayout>

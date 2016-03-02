@@ -187,9 +187,9 @@ public class AutoPlayViewPage extends FrameLayout {
             params.setMargins(margin, 0, margin, 0);
             imageView.setLayoutParams(params);
             if (i == 0) {
-                imageView.setBackgroundResource(R.drawable.dot_focused);
+                imageView.setBackgroundResource(R.drawable.dot_focused_shape);
             } else {
-                imageView.setBackgroundResource(R.drawable.dot_normal);
+                imageView.setBackgroundResource(R.drawable.dot_normal_shape);
             }
             mIndicationGroup.addView(imageView);
         }
@@ -235,9 +235,9 @@ public class AutoPlayViewPage extends FrameLayout {
             String text = data.get(index).text;
             mText.setText(TextUtils.isEmpty(text) ? "" : text);
             //恢复默认没有获得焦点指示器样式
-            ((mIndicationGroup.getChildAt(preIndex))).setBackgroundResource(R.drawable.dot_normal);
+            ((mIndicationGroup.getChildAt(preIndex))).setBackgroundResource(R.drawable.dot_normal_shape);
             // 设置当前显示图片的指示器样式
-            ((mIndicationGroup.getChildAt(index))).setBackgroundResource(R.drawable.dot_focused);
+            ((mIndicationGroup.getChildAt(index))).setBackgroundResource(R.drawable.dot_focused_shape);
             preIndex = index;
         }
 
@@ -359,6 +359,8 @@ public class AutoPlayViewPage extends FrameLayout {
      * 自定义ViewPager主要用于事件处理
      */
     public class ImageCycleViewPager extends ViewPager {
+        float mDownX = 0;
+        float mDownY = 0;
 
         public ImageCycleViewPager(Context context) {
             super(context);
@@ -381,7 +383,29 @@ public class AutoPlayViewPage extends FrameLayout {
          */
         @Override
         public boolean dispatchTouchEvent(MotionEvent ev) {
-            getParent().requestDisallowInterceptTouchEvent(true);
+            switch (ev.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    mDownX = ev.getX();
+                    mDownY = ev.getY();
+                    getParent().requestDisallowInterceptTouchEvent(true);
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    float moveX=Math.abs(ev.getX() - mDownX);
+                    float moveY= Math.abs(ev.getY() - mDownY);
+                    if (moveX>moveY) {
+                        getParent().requestDisallowInterceptTouchEvent(true);
+                    } else {
+                        getParent().requestDisallowInterceptTouchEvent(false);
+                    }
+
+                    break;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    getParent().requestDisallowInterceptTouchEvent(false);
+                    break;
+
+            }
+
             return super.dispatchTouchEvent(ev);
         }
 

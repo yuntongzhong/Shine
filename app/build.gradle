@@ -29,6 +29,7 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
     compile 'com.squareup.okio:okio:1.6.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'com.yalantis:phoenix:1.2.3'
 
     apt "org.androidannotations:androidannotations:$AAVersion"
     compile "org.androidannotations:androidannotations-api:$AAVersion"

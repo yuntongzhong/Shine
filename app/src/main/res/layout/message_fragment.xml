@@ -26,13 +26,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
+                android:padding="10dp"
                 android:orientation="vertical">
+
+
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/message_selected" />
+                    android:src="@mipmap/message_selected" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -52,6 +55,9 @@
                     息界面这是消息界面这是消息界面这是消息界面这是消息界面这是消息界面这是消
                     息界面这是消息界面这是消息界面这是消息界面"
                     android:textSize="20sp" />
+                <TextView
+                    style="@style/BaseButton"
+                    android:text="了解你想知道的资讯"/>
             </LinearLayout>
 
 

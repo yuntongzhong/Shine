@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.zyt.shine.view.AutoPlayViewPage
+        android:id="@+id/news_auto_play"
+        android:layout_width="match_parent"
+        android:layout_height="160dip"></com.zyt.shine.view.AutoPlayViewPage>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_selector"
+        android:padding="5dp"
+        android:textColor="@color/colorPrimary"
+        android:textSize="16sp"
+        android:text="搜索你想了解的资讯"/>
+</LinearLayout>
