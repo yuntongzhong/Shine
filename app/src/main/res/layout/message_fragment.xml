@@ -15,11 +15,11 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <com.zyt.shine.view.AutoPlayViewPage
+            <com.zyt.shine.ui.view.AutoPlayViewPage
                 android:id="@+id/icv_topView"
                 android:layout_width="match_parent"
                 android:layout_height="160dip">
-            </com.zyt.shine.view.AutoPlayViewPage>
+            </com.zyt.shine.ui.view.AutoPlayViewPage>
 
 
             <LinearLayout

@@ -1,4 +1,4 @@
-package com.zyt.shine.fragment;
+package com.zyt.shine.ui.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -6,12 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.yalantis.phoenix.PullToRefreshView;
 import com.zyt.shine.R;
-import com.zyt.shine.view.AutoPlayViewPage;
+import com.zyt.shine.ui.view.AutoPlayViewPage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,12 +34,12 @@ public class NewsFragment extends Fragment {
                              Bundle savedInstanceState) {
         ViewGroup newsLayout = (ViewGroup) inflater.inflate(R.layout.news_fragment, container,
                 false);
-        listView= (ListView) newsLayout.findViewById(R.id.list_view);
+        listView = (ListView) newsLayout.findViewById(R.id.list_view);
         //listView.addHeaderView(inflater.inflate(R.layout.header_list_layout, null),null,false);
         listView.addHeaderView(inflater.inflate(R.layout.header_list_layout, null));
-        mImageCycleView=(AutoPlayViewPage) newsLayout.findViewById(R.id.news_auto_play);
-        listView.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item,arr));
-        mPullToRefreshView= (PullToRefreshView) newsLayout.findViewById(R.id.pull_to_refresh);
+        mImageCycleView = (AutoPlayViewPage) newsLayout.findViewById(R.id.news_auto_play);
+        listView.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, arr));
+        mPullToRefreshView = (PullToRefreshView) newsLayout.findViewById(R.id.pull_to_refresh);
 
         afterViews();
         initdata();
@@ -60,35 +59,27 @@ public class NewsFragment extends Fragment {
             }
         });
     }
+
     void initdata() {
-    List<AutoPlayViewPage.ImageInfo> list = new ArrayList<AutoPlayViewPage.ImageInfo>();
+        List<AutoPlayViewPage.ImageInfo> list = new ArrayList<AutoPlayViewPage.ImageInfo>();
 
-    //res图片资源
-    list.add(new AutoPlayViewPage.ImageInfo(R.mipmap.b, "扑树又回来啦！再唱经典老歌引万人大合唱", ""));
-    list.add(new AutoPlayViewPage.ImageInfo(R.mipmap.c, "揭秘北京电影如何升级", ""));
-    list.add(new AutoPlayViewPage.ImageInfo(R.mipmap.d, "乐视网TV版大派送", ""));
-    list.add(new AutoPlayViewPage.ImageInfo(R.mipmap.e, "热血屌丝的反杀", ""));
-    mImageCycleView.loadData(list, new AutoPlayViewPage.LoadImageCallBack() {
-        @Override
-        public ImageView loadAndDisplay(AutoPlayViewPage.ImageInfo imageInfo) {
+        //res图片资源
+        list.add(new AutoPlayViewPage.ImageInfo(R.mipmap.b, "扑树又回来啦！再唱经典老歌引万人大合唱", ""));
+        list.add(new AutoPlayViewPage.ImageInfo(R.mipmap.c, "揭秘北京电影如何升级", ""));
+        list.add(new AutoPlayViewPage.ImageInfo(R.mipmap.d, "乐视网TV版大派送", ""));
+        list.add(new AutoPlayViewPage.ImageInfo(R.mipmap.e, "热血屌丝的反杀", ""));
+        mImageCycleView.loadData(list);
 
-            //本地图片
-            ImageView imageView = new ImageView(getContext());
-            //imageView.setImageResource(Integer.parseInt(imageInfo.image.toString()));
-            imageView.setImageResource((int) imageInfo.image);
-            return imageView;
-        }
-    });
-    mImageCycleView.setOnPageClickListener(new AutoPlayViewPage.OnPageClickListener() {
-        @Override
-        public void onClick(View imageView, AutoPlayViewPage.ImageInfo imageInfo) {
+        mImageCycleView.setOnPageClickListener(new AutoPlayViewPage.OnPageClickListener() {
+            @Override
+            public void onClick(View imageView, AutoPlayViewPage.ImageInfo imageInfo) {
 //            Intent intent = new Intent();
 //            intent.setAction("android.intent.action.VIEW");
 //            Uri content_url = Uri.parse("http://www.baidu.com");
 //            intent.setData(content_url);
 //            startActivity(intent);
-        }
-    });
+            }
+        });
 
-}
+    }
 }

@@ -1,4 +1,4 @@
-package com.zyt.shine.activity;
+package com.zyt.shine.ui.activity;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;

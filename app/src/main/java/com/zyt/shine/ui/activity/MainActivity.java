@@ -1,13 +1,10 @@
-package com.zyt.shine.activity;
+package com.zyt.shine.ui.activity;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTabHost;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -25,12 +22,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.zyt.shine.R;
-import com.zyt.shine.fragment.ContactsFragment;
-import com.zyt.shine.fragment.MessageFragment;
-import com.zyt.shine.fragment.Navigation;
-import com.zyt.shine.fragment.NewsFragment;
-import com.zyt.shine.fragment.SettingFragment;
+
 import com.zyt.shine.glide.GlideCircleTransform;
+import com.zyt.shine.ui.fragment.Navigation;
 import com.zyt.shine.utils.ImmersedStatusbarUtils;
 
 public class MainActivity extends AppCompatActivity
@@ -80,7 +74,7 @@ public class MainActivity extends AppCompatActivity
 
         mFragmentTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
         mFragmentTabHost.setup(getApplicationContext(), getSupportFragmentManager(), R.id.realtabcontent);
-        Navigation[] navigations = com.zyt.shine.fragment.Navigation.values();
+        Navigation[] navigations = Navigation.values();
 
         //初始化导航栏
         for (int i = 0; i < navigations.length; i++) {

@@ -4,10 +4,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.zyt.shine.view.AutoPlayViewPage
+    <com.zyt.shine.ui.view.AutoPlayViewPage
         android:id="@+id/news_auto_play"
         android:layout_width="match_parent"
-        android:layout_height="160dip"></com.zyt.shine.view.AutoPlayViewPage>
+        android:layout_height="160dip"></com.zyt.shine.ui.view.AutoPlayViewPage>
 
     <Button
         android:layout_width="wrap_content"

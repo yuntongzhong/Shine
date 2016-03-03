@@ -1,4 +1,4 @@
-package com.zyt.shine.view;
+package com.zyt.shine.ui.view;
 
 import android.content.Context;
 import android.os.Handler;
@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.zyt.shine.R;
+import com.zyt.shine.glide.GlideCircleTransform;
 import com.zyt.shine.utils.DisplayUtil;
 
 import java.util.ArrayList;
@@ -41,7 +44,7 @@ public class AutoPlayViewPage extends FrameLayout {
     /**
      * 加载图片回调函数
      */
-    private LoadImageCallBack mLoadImageCallBack;
+    private final int mCycleDelayedMsg=0;
 
     /**
      * 图片轮播指示器容器
@@ -134,21 +137,16 @@ public class AutoPlayViewPage extends FrameLayout {
     /**
      * 加载显示的数据  网络图片资源及标题
      *
-     * @param list     数据
-     * @param callBack 如何加载图片及显示的回调方法 not null
+     * @param list 数据
      */
-    public void loadData(List<ImageInfo> list, LoadImageCallBack callBack) {
+
+    public void loadData(List<ImageInfo> list) {
         data = list;
         mCount = list.size();
         initIndication();
-        if (callBack == null) {
-            new IllegalArgumentException("LoadImageCallBack 回调函数不能为空！");
-        }
-        mLoadImageCallBack = callBack;
         mViewPager.setAdapter(new ImageCycleAdapter());
         //最大值中间 的第一个
         mViewPager.setCurrentItem(Integer.MAX_VALUE / 2 - ((Integer.MAX_VALUE / 2) % mCount));
-
     }
 
     /**
@@ -158,6 +156,14 @@ public class AutoPlayViewPage extends FrameLayout {
      */
     public void setOnPageClickListener(OnPageClickListener listener) {
         mOnPageClickListener = listener;
+    }
+
+    /**
+     * 设置
+     * @param item
+     */
+    public void setCurrentItem(int item) {
+
     }
 
     /**
@@ -207,19 +213,6 @@ public class AutoPlayViewPage extends FrameLayout {
         public Object value;
     }
 
-
-    /**
-     * 加载图片并显示回调接口
-     */
-    public interface LoadImageCallBack {
-        /**
-         * 自己如何设置加载图片
-         *
-         * @param imageInfo 数据信息
-         */
-        ImageView loadAndDisplay(ImageInfo imageInfo);
-    }
-
     /**
      * 轮播图片监听
      */
@@ -259,10 +252,12 @@ public class AutoPlayViewPage extends FrameLayout {
         @Override
         public Object instantiateItem(ViewGroup container, final int position) {
             final ImageInfo imageInfo = data.get(position % mCount);
-            ImageView imageView = mLoadImageCallBack.loadAndDisplay(imageInfo);
+            ImageView imageView = new ImageView(mContext);
             imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT));
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            Glide.with(mContext.getApplicationContext()).load(imageInfo.image)
+                    .centerCrop()
+                    .into(imageView);
             // 设置图片点击监听
             imageView.setOnClickListener(new OnClickListener() {
                 @Override
@@ -297,7 +292,7 @@ public class AutoPlayViewPage extends FrameLayout {
      * 开始图片轮播
      */
     private void startImageCycle() {
-        handler.sendEmptyMessageDelayed(0, mCycleDelayed);
+        handler.sendEmptyMessageDelayed(mCycleDelayedMsg, mCycleDelayed);
     }
 
     /**
@@ -313,9 +308,9 @@ public class AutoPlayViewPage extends FrameLayout {
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-            if (mViewPager != null) {
+            if (mViewPager != null&&msg.what==mCycleDelayedMsg) {
                 mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
-                handler.sendEmptyMessageDelayed(0, mCycleDelayed);
+                handler.sendEmptyMessageDelayed(mCycleDelayedMsg, mCycleDelayed);
             }
             return false;
         }
@@ -326,7 +321,7 @@ public class AutoPlayViewPage extends FrameLayout {
      */
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_UP) {
+        if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
             if (isAutoCycle) {
                 // 开始图片滚动
                 startImageCycle();
@@ -340,6 +335,9 @@ public class AutoPlayViewPage extends FrameLayout {
         return super.dispatchTouchEvent(event);
     }
 
+    /**
+     * view销毁时调用此方法
+     */
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
@@ -347,6 +345,9 @@ public class AutoPlayViewPage extends FrameLayout {
         stopImageCycle();
     }
 
+    /**
+     * onAttachedToWindow是在第一次onDraw前调用的
+     */
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
@@ -390,22 +391,19 @@ public class AutoPlayViewPage extends FrameLayout {
                     getParent().requestDisallowInterceptTouchEvent(true);
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    float moveX=Math.abs(ev.getX() - mDownX);
-                    float moveY= Math.abs(ev.getY() - mDownY);
-                    if (moveX>moveY) {
+                    float moveX = Math.abs(ev.getX() - mDownX);
+                    float moveY = Math.abs(ev.getY() - mDownY);
+                    if (moveX > moveY) {
                         getParent().requestDisallowInterceptTouchEvent(true);
                     } else {
                         getParent().requestDisallowInterceptTouchEvent(false);
                     }
-
                     break;
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
                     getParent().requestDisallowInterceptTouchEvent(false);
                     break;
-
             }
-
             return super.dispatchTouchEvent(ev);
         }
 

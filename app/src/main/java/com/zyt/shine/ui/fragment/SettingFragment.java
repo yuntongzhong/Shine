@@ -1,4 +1,4 @@
-package com.zyt.shine.fragment;
+package com.zyt.shine.ui.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,16 +9,16 @@ import android.view.ViewGroup;
 import com.zyt.shine.R;
 
 /**
- * 用于展示联系人的Fragment
+ *  用于展示设置的Fragment
  */
-public class ContactsFragment extends Fragment {
+public class SettingFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View contactsLayout = inflater.inflate(R.layout.contacts_fragment,
+		View settingLayout = inflater.inflate(R.layout.setting_fragment,
 				container, false);
-		return contactsLayout;
+		return settingLayout;
 	}
 
 }

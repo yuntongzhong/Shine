@@ -1,4 +1,4 @@
-package com.zyt.shine.fragment;
+package com.zyt.shine.ui.fragment;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -7,10 +7,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.zyt.shine.R;
-import com.zyt.shine.view.AutoPlayViewPage;
+import com.zyt.shine.ui.view.AutoPlayViewPage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,17 +40,18 @@ public class MessageFragment extends Fragment {
         list.add(new AutoPlayViewPage.ImageInfo(R.mipmap.c, "揭秘北京电影如何升级", ""));
         list.add(new AutoPlayViewPage.ImageInfo(R.mipmap.d, "乐视网TV版大派送", ""));
         list.add(new AutoPlayViewPage.ImageInfo(R.mipmap.e, "热血屌丝的反杀", ""));
-        mImageCycleView.loadData(list, new AutoPlayViewPage.LoadImageCallBack() {
-            @Override
-            public ImageView loadAndDisplay(AutoPlayViewPage.ImageInfo imageInfo) {
-
-                //本地图片
-                ImageView imageView = new ImageView(getContext());
-                //imageView.setImageResource(Integer.parseInt(imageInfo.image.toString()));
-                imageView.setImageResource((int) imageInfo.image);
-                return imageView;
-            }
-        });
+//        mImageCycleView.loadData(list, new AutoPlayViewPage.LoadImageCallBack() {
+//            @Override
+//            public ImageView loadAndDisplay(AutoPlayViewPage.ImageInfo imageInfo) {
+//
+//                //本地图片
+//                ImageView imageView = new ImageView(getContext());
+//                //imageView.setImageResource(Integer.parseInt(imageInfo.image.toString()));
+//                imageView.setImageResource((int) imageInfo.image);
+//                return imageView;
+//            }
+//        });
+        mImageCycleView.loadData(list);
         mImageCycleView.setOnPageClickListener(new AutoPlayViewPage.OnPageClickListener() {
             @Override
             public void onClick(View imageView, AutoPlayViewPage.ImageInfo imageInfo) {

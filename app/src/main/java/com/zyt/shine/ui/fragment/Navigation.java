@@ -1,4 +1,4 @@
-package com.zyt.shine.fragment;
+package com.zyt.shine.ui.fragment;
 
 import com.zyt.shine.R;
 
