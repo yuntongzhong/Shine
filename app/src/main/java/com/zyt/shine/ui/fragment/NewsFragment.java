@@ -35,9 +35,9 @@ public class NewsFragment extends Fragment {
         ViewGroup newsLayout = (ViewGroup) inflater.inflate(R.layout.news_fragment, container,
                 false);
         listView = (ListView) newsLayout.findViewById(R.id.list_view);
-        //listView.addHeaderView(inflater.inflate(R.layout.header_list_layout, null),null,false);
-        listView.addHeaderView(inflater.inflate(R.layout.header_list_layout, null));
-        mImageCycleView = (AutoPlayViewPage) newsLayout.findViewById(R.id.news_auto_play);
+        ViewGroup headerGroup= (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.header_list_layout, null, false);
+        listView.addHeaderView(headerGroup);
+        mImageCycleView = (AutoPlayViewPage) headerGroup.findViewById(R.id.news_auto_play);
         listView.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, arr));
         mPullToRefreshView = (PullToRefreshView) newsLayout.findViewById(R.id.pull_to_refresh);
 

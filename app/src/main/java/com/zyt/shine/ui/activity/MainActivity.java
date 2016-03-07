@@ -1,6 +1,7 @@
 package com.zyt.shine.ui.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -11,6 +12,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.BackgroundColorSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.URLSpan;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,6 +29,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.zyt.shine.R;
 
+import com.zyt.shine.entity.LoginInfoEntity;
 import com.zyt.shine.glide.GlideCircleTransform;
 import com.zyt.shine.ui.fragment.Navigation;
 import com.zyt.shine.utils.ImmersedStatusbarUtils;
@@ -34,7 +41,6 @@ public class MainActivity extends AppCompatActivity
 
     ImageView icon;
     DrawerLayout drawerLayout;
-    MenuItem preMenuItem = null;//用于辨别此前是否已有选中条目
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +48,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         // 初始化布局元素
         initViews();
-        setHeadPortrait("http://img1.3lian.com/img2008/06/019/ych.jpg");
+        //setUserInfo("http://img1.3lian.com/img2008/06/019/ych.jpg");
     }
 
     private void initViews() {
@@ -58,17 +64,11 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        //navigationView.getMenu().getItem(0).setCheckable(true);
+        //默认选中
         navigationView.setCheckedItem(R.id.nav_camera);
-        //设置头像的点击事件
-        icon = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.head_portrait);
-        icon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, LoginActivity_.class);
-                startActivity(intent);
-            }
-        });
+        View headerView = navigationView.getHeaderView(0);
+        setUserInfo(headerView, new LoginInfoEntity("叶凡", "http://img1.3lian.com/img2008/06/019/ych.jpg", "来自地球的荒古圣体！"));
+
         //设置侧滑菜单的监听事件
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -85,10 +85,23 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * 设置头像
+     * 设置登录信息
      */
-    private void setHeadPortrait(String url) {
-        Glide.with(this).load(url)
+    private void setUserInfo(View headerView, LoginInfoEntity loginInfo) {
+        //设置头像的点击事件
+        icon = (ImageView) headerView.findViewById(R.id.head_portrait);
+        TextView userName = (TextView) headerView.findViewById(R.id.user_name);
+        TextView personalProfile = (TextView) headerView.findViewById(R.id.personal_profile);
+        userName.setText(loginInfo.getUserName());
+        personalProfile.setText(loginInfo.getPersonalProfile());
+        icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, LoginActivity_.class);
+                startActivity(intent);
+            }
+        });
+        Glide.with(this).load(loginInfo.getUserIcon())
                 .centerCrop()
                 .transform(new GlideCircleTransform(this))
                 .into(icon);
@@ -136,15 +149,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-
-        //  headImage.setOnClickListener(this);
-        //首先将选中条目变为选中状态 即checked为true,后关闭Drawer，以前选中的Item需要变为未选中状态
-//        if (preMenuItem != null)
-//            preMenuItem.setChecked(false);
         item.setChecked(true);
-        // drawerLayout.closeDrawers();
-        // preMenuItem = item;
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {

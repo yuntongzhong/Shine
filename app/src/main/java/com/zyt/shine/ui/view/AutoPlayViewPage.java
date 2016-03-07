@@ -3,12 +3,13 @@ package com.zyt.shine.ui.view;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.zyt.shine.R;
-import com.zyt.shine.glide.GlideCircleTransform;
 import com.zyt.shine.utils.DisplayUtil;
 
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ public class AutoPlayViewPage extends FrameLayout {
     /**
      * 加载图片回调函数
      */
-    private final int mCycleDelayedMsg=0;
+    private final int mCycleDelayedMsg = 0;
 
     /**
      * 图片轮播指示器容器
@@ -72,6 +72,14 @@ public class AutoPlayViewPage extends FrameLayout {
      */
     private TextView mText;
 
+    /**
+     * 图片轮播是自动滚动状态  true 自动滚动，false 图片不能自动滚动只能手动左右滑动
+     */
+    private boolean isAutoCycle = true;
+    /**
+     * 自动轮播时间间隔默认3秒
+     */
+    private long mCycleDelayed = 3000;
 
     public AutoPlayViewPage(Context context) {
         super(context);
@@ -108,15 +116,6 @@ public class AutoPlayViewPage extends FrameLayout {
     }
 
     /**
-     * 图片轮播是自动滚动状态  true 自动滚动，false 图片不能自动滚动只能手动左右滑动
-     */
-    private boolean isAutoCycle = true;
-    /**
-     * 自动轮播时间间隔默认3秒
-     */
-    private long mCycleDelayed = 3000;
-
-    /**
      * 设置自动轮播时间间隔
      *
      * @param delayed 自动轮播时间间隔
@@ -139,7 +138,6 @@ public class AutoPlayViewPage extends FrameLayout {
      *
      * @param list 数据
      */
-
     public void loadData(List<ImageInfo> list) {
         data = list;
         mCount = list.size();
@@ -159,11 +157,34 @@ public class AutoPlayViewPage extends FrameLayout {
     }
 
     /**
-     * 设置
+     * 设置当前位置
+     *
      * @param item
      */
     public void setCurrentItem(int item) {
+        if (mViewPager != null) {
+            mViewPager.setCurrentItem(item % mCount);
+        }
+    }
 
+    /**
+     * 保存view的状态
+     *
+     * @return
+     */
+    @Override
+    public Parcelable onSaveInstanceState() {
+        Parcelable superState = super.onSaveInstanceState();
+        SavedState ss = new SavedState(superState);
+        ss.state = mViewPager.getCurrentItem();
+        return ss;
+    }
+
+    @Override
+    public void onRestoreInstanceState(Parcelable state) {
+        SavedState ss = (SavedState) state;
+        super.onRestoreInstanceState(ss.getSuperState());
+        setCurrentItem(ss.state);
     }
 
     /**
@@ -178,7 +199,6 @@ public class AutoPlayViewPage extends FrameLayout {
          */
         void onClick(View imageView, ImageInfo imageInfo);
     }
-
 
     /**
      * 初始化指标器
@@ -202,23 +222,24 @@ public class AutoPlayViewPage extends FrameLayout {
     }
 
     public static class ImageInfo {
+        public Object image;
+        public String text = "";
+        public Object value;
+
         public ImageInfo(Object image, String text, Object value) {
             this.image = image;
             this.text = text;
             this.value = value;
         }
-
-        public Object image;
-        public String text = "";
-        public Object value;
     }
 
     /**
      * 轮播图片监听
      */
     private final class ImageCyclePageChangeListener implements OnPageChangeListener {
-
-        //上次指示器指示的位置,开始为默认位置0
+        /**
+         * 上次指示器指示的位置,开始为默认位置0
+         */
         private int preIndex = 0;
 
         @Override
@@ -239,8 +260,7 @@ public class AutoPlayViewPage extends FrameLayout {
         }
 
         @Override
-        public void onPageScrolled(int i, float v, int i1) {
-
+        public void onPageScrolled(int arg0, float arg1, int arg2) {
         }
     }
 
@@ -248,7 +268,6 @@ public class AutoPlayViewPage extends FrameLayout {
      * 图片轮播适配器
      */
     private class ImageCycleAdapter extends PagerAdapter {
-
         @Override
         public Object instantiateItem(ViewGroup container, final int position) {
             final ImageInfo imageInfo = data.get(position % mCount);
@@ -308,8 +327,8 @@ public class AutoPlayViewPage extends FrameLayout {
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-            if (mViewPager != null&&msg.what==mCycleDelayedMsg) {
-                mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
+            if (mViewPager != null && msg.what == mCycleDelayedMsg) {
+                mViewPager.setCurrentItem((mViewPager.getCurrentItem() + 1));
                 handler.sendEmptyMessageDelayed(mCycleDelayedMsg, mCycleDelayed);
             }
             return false;
@@ -320,8 +339,8 @@ public class AutoPlayViewPage extends FrameLayout {
      * 触摸停止计时器，抬起启动计时器
      */
     @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_UP || ev.getAction() == MotionEvent.ACTION_CANCEL) {
             if (isAutoCycle) {
                 // 开始图片滚动
                 startImageCycle();
@@ -332,7 +351,7 @@ public class AutoPlayViewPage extends FrameLayout {
                 stopImageCycle();
             }
         }
-        return super.dispatchTouchEvent(event);
+        return super.dispatchTouchEvent(ev);
     }
 
     /**
@@ -360,8 +379,6 @@ public class AutoPlayViewPage extends FrameLayout {
      * 自定义ViewPager主要用于事件处理
      */
     public class ImageCycleViewPager extends ViewPager {
-        float mDownX = 0;
-        float mDownY = 0;
 
         public ImageCycleViewPager(Context context) {
             super(context);
@@ -384,6 +401,17 @@ public class AutoPlayViewPage extends FrameLayout {
          */
         @Override
         public boolean dispatchTouchEvent(MotionEvent ev) {
+//          getParent().requestDisallowInterceptTouchEvent(true);
+            return super.dispatchTouchEvent(ev);
+        }
+
+        /**
+         * 事件处理
+         */
+        @Override
+        public boolean onTouchEvent(MotionEvent ev) {
+            float mDownX = 0;
+            float mDownY = 0;
             switch (ev.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     mDownX = ev.getX();
@@ -399,20 +427,43 @@ public class AutoPlayViewPage extends FrameLayout {
                         getParent().requestDisallowInterceptTouchEvent(false);
                     }
                     break;
-                case MotionEvent.ACTION_UP:
-                case MotionEvent.ACTION_CANCEL:
-                    getParent().requestDisallowInterceptTouchEvent(false);
+                default:
                     break;
             }
-            return super.dispatchTouchEvent(ev);
-        }
-
-        /**
-         * 事件处理
-         */
-        @Override
-        public boolean onTouchEvent(MotionEvent ev) {
             return super.onTouchEvent(ev);
         }
+    }
+
+    /**
+     * 用于保存view的状态
+     */
+    static class SavedState extends BaseSavedState {
+        int state;
+
+        SavedState(Parcelable superState) {
+            super(superState);
+        }
+
+        private SavedState(Parcel in) {
+            super(in);
+            state = in.readInt();
+        }
+
+        @Override
+        public void writeToParcel(Parcel out, int flags) {
+            super.writeToParcel(out, flags);
+            out.writeInt(state);
+        }
+
+        public static final Parcelable.Creator<SavedState> CREATOR
+                = new Parcelable.Creator<SavedState>() {
+            public SavedState createFromParcel(Parcel in) {
+                return new SavedState(in);
+            }
+
+            public SavedState[] newArray(int size) {
+                return new SavedState[size];
+            }
+        };
     }
 }
