@@ -1,14 +1,16 @@
 package com.zyt.shine.ui.fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.yalantis.phoenix.PullToRefreshView;
 import com.zyt.shine.R;
 import com.zyt.shine.ui.view.AutoPlayViewPage;
 
@@ -20,14 +22,33 @@ import java.util.List;
  */
 public class NewsFragment extends Fragment {
 
-    private final long REFRESH_DELAY = 2000;
+    private final long REFRESH_DELAY = 3000;
 
     private AutoPlayViewPage mImageCycleView;
-    private PullToRefreshView mPullToRefreshView;
-
+    SwipeRefreshLayout swipeRefreshLayout;
+    ArrayAdapter arrayAdapter;
     ListView listView;
-    String arr[] = {"1234", "56789", "dsad", "asduwyah", "1234", "56789", "dsad",
-            "asduwyah", "1234", "56789", "dsad", "asduwyah"};
+    List<String> listString =new ArrayList<String>();
+    List<AutoPlayViewPage.ImageInfo> listImg = new ArrayList<AutoPlayViewPage.ImageInfo>();
+//    String arr[] = {"1234", "56789", "dsad", "asduwyah", "1234", "56789", "dsad",
+//            "asduwyah", "1234", "56789", "dsad", "asduwyah"};
+
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 1:
+                    listString.add(msg.obj.toString());
+                    swipeRefreshLayout.setRefreshing(false);
+                    arrayAdapter.notifyDataSetChanged();
+                    //swipeRefreshLayout.setEnabled(false);
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,48 +59,56 @@ public class NewsFragment extends Fragment {
         ViewGroup headerGroup= (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.header_list_layout, null, false);
         listView.addHeaderView(headerGroup);
         mImageCycleView = (AutoPlayViewPage) headerGroup.findViewById(R.id.news_auto_play);
-        listView.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, arr));
-        mPullToRefreshView = (PullToRefreshView) newsLayout.findViewById(R.id.pull_to_refresh);
-
+        mImageCycleView.loadData(listImg);
+        arrayAdapter=new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, listString);
+        listView.setAdapter(arrayAdapter);
+        swipeRefreshLayout= (SwipeRefreshLayout) newsLayout.findViewById(R.id.news_refresh);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark,
+                R.color.mediumturquoise,
+                R.color.colorAccent,
+                R.color.slateblue);
         afterViews();
-        initdata();
+
         return newsLayout;
     }
 
     protected void afterViews() {
-        mPullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mPullToRefreshView.postDelayed(new Runnable() {
+                new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        mPullToRefreshView.setRefreshing(false);
+                        try {
+                            Thread.sleep(REFRESH_DELAY);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        Message message=mHandler.obtainMessage();
+                        message.what=1;
+                        message.obj="新增数据"+ listString.size();
+                        mHandler.sendMessage(message);
                     }
-                }, REFRESH_DELAY);
+                }).start();
             }
         });
     }
 
     void initdata() {
-        List<AutoPlayViewPage.ImageInfo> list = new ArrayList<AutoPlayViewPage.ImageInfo>();
-
         //res图片资源
-        list.add(new AutoPlayViewPage.ImageInfo(R.mipmap.b, "扑树又回来啦！再唱经典老歌引万人大合唱", ""));
-        list.add(new AutoPlayViewPage.ImageInfo(R.mipmap.c, "揭秘北京电影如何升级", ""));
-        list.add(new AutoPlayViewPage.ImageInfo(R.mipmap.d, "乐视网TV版大派送", ""));
-        list.add(new AutoPlayViewPage.ImageInfo(R.mipmap.e, "热血屌丝的反杀", ""));
-        mImageCycleView.loadData(list);
+        listImg.add(new AutoPlayViewPage.ImageInfo(R.mipmap.b, "扑树又回来啦！再唱经典老歌引万人大合唱", ""));
+        listImg.add(new AutoPlayViewPage.ImageInfo(R.mipmap.c, "揭秘北京电影如何升级", ""));
+        listImg.add(new AutoPlayViewPage.ImageInfo(R.mipmap.d, "乐视网TV版大派送", ""));
+        listImg.add(new AutoPlayViewPage.ImageInfo(R.mipmap.e, "热血屌丝的反杀", ""));
+        for (int i=0;i<5;i++){
+            this.listString.add("数据");
+        }
 
-        mImageCycleView.setOnPageClickListener(new AutoPlayViewPage.OnPageClickListener() {
-            @Override
-            public void onClick(View imageView, AutoPlayViewPage.ImageInfo imageInfo) {
-//            Intent intent = new Intent();
-//            intent.setAction("android.intent.action.VIEW");
-//            Uri content_url = Uri.parse("http://www.baidu.com");
-//            intent.setData(content_url);
-//            startActivity(intent);
-            }
-        });
+    }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initdata();
     }
 }

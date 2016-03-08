@@ -5,8 +5,8 @@
     android:background="@color/gainsboro"
     android:orientation="vertical">
 
-    <com.yalantis.phoenix.PullToRefreshView
-        android:id="@+id/pull_to_refresh"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/news_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -18,7 +18,7 @@
             android:dividerHeight="0dp"
             android:saveEnabled="true" />
 
-    </com.yalantis.phoenix.PullToRefreshView>
 
 
+    </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

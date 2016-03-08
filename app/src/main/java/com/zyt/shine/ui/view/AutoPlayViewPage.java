@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +41,7 @@ public class AutoPlayViewPage extends FrameLayout {
     /**
      * 数据源
      */
-    private List<ImageInfo> data = new ArrayList<ImageInfo>();
+    private List<ImageInfo> data= new ArrayList<ImageInfo>();
     /**
      * 加载图片回调函数
      */
@@ -80,6 +81,13 @@ public class AutoPlayViewPage extends FrameLayout {
      * 自动轮播时间间隔默认3秒
      */
     private long mCycleDelayed = 3000;
+
+    private ImageCycleAdapter imageCycleAdapter;
+
+    /**
+     * 是否没有数据
+     */
+    private boolean isNotData=false;
 
     public AutoPlayViewPage(Context context) {
         super(context);
@@ -139,12 +147,30 @@ public class AutoPlayViewPage extends FrameLayout {
      * @param list 数据
      */
     public void loadData(List<ImageInfo> list) {
-        data = list;
+        data.addAll(list);
         mCount = list.size();
+        if (list.size() == 0) {
+            data.add(new ImageInfo("", "", ""));
+            mCount = 1;
+            isNotData=true;
+        }
         initIndication();
-        mViewPager.setAdapter(new ImageCycleAdapter());
+        mViewPager.setAdapter(imageCycleAdapter=new ImageCycleAdapter());
         //最大值中间 的第一个
         mViewPager.setCurrentItem(Integer.MAX_VALUE / 2 - ((Integer.MAX_VALUE / 2) % mCount));
+    }
+
+    public void notifyDataChanged(List<ImageInfo> list) {
+        if(list.size()==0){
+            return;
+        }
+        data.clear();
+        data.addAll(list);
+        mCount = data.size();
+        initIndication();
+        imageCycleAdapter.notifyDataSetChanged();
+        //设置第一个点的样式为未选中
+        ((mIndicationGroup.getChildAt(0))).setBackgroundResource(R.drawable.dot_normal_shape);
     }
 
     /**
@@ -176,7 +202,7 @@ public class AutoPlayViewPage extends FrameLayout {
     public Parcelable onSaveInstanceState() {
         Parcelable superState = super.onSaveInstanceState();
         SavedState ss = new SavedState(superState);
-        ss.state = mViewPager.getCurrentItem();
+        ss.mCuurrentIndex = mViewPager.getCurrentItem();
         return ss;
     }
 
@@ -184,8 +210,9 @@ public class AutoPlayViewPage extends FrameLayout {
     public void onRestoreInstanceState(Parcelable state) {
         SavedState ss = (SavedState) state;
         super.onRestoreInstanceState(ss.getSuperState());
-        setCurrentItem(ss.state);
+        setCurrentItem(ss.mCuurrentIndex);
     }
+
 
     /**
      * 轮播控件的监听事件
@@ -221,7 +248,7 @@ public class AutoPlayViewPage extends FrameLayout {
         }
     }
 
-    public static class ImageInfo {
+    public static class ImageInfo implements Parcelable{
         public Object image;
         public String text = "";
         public Object value;
@@ -230,6 +257,32 @@ public class AutoPlayViewPage extends FrameLayout {
             this.image = image;
             this.text = text;
             this.value = value;
+        }
+
+        protected ImageInfo(Parcel in) {
+            text = in.readString();
+        }
+
+        public static final Creator<ImageInfo> CREATOR = new Creator<ImageInfo>() {
+            @Override
+            public ImageInfo createFromParcel(Parcel in) {
+                return new ImageInfo(in);
+            }
+
+            @Override
+            public ImageInfo[] newArray(int size) {
+                return new ImageInfo[size];
+            }
+        };
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(text);
         }
     }
 
@@ -330,6 +383,9 @@ public class AutoPlayViewPage extends FrameLayout {
             if (mViewPager != null && msg.what == mCycleDelayedMsg) {
                 mViewPager.setCurrentItem((mViewPager.getCurrentItem() + 1));
                 handler.sendEmptyMessageDelayed(mCycleDelayedMsg, mCycleDelayed);
+            }else if(mViewPager != null && msg.what == 1){
+                //数据刷新时what为1
+                mViewPager.setCurrentItem(Integer.MAX_VALUE / 2 - ((Integer.MAX_VALUE / 2) % mCount));
             }
             return false;
         }
@@ -401,7 +457,7 @@ public class AutoPlayViewPage extends FrameLayout {
          */
         @Override
         public boolean dispatchTouchEvent(MotionEvent ev) {
-//          getParent().requestDisallowInterceptTouchEvent(true);
+        // getParent().requestDisallowInterceptTouchEvent(true);
             return super.dispatchTouchEvent(ev);
         }
 
@@ -438,21 +494,19 @@ public class AutoPlayViewPage extends FrameLayout {
      * 用于保存view的状态
      */
     static class SavedState extends BaseSavedState {
-        int state;
-
+        int mCuurrentIndex=0;
         SavedState(Parcelable superState) {
             super(superState);
         }
-
         private SavedState(Parcel in) {
             super(in);
-            state = in.readInt();
+            mCuurrentIndex = in.readInt();
         }
 
         @Override
         public void writeToParcel(Parcel out, int flags) {
             super.writeToParcel(out, flags);
-            out.writeInt(state);
+            out.writeInt(mCuurrentIndex);
         }
 
         public static final Parcelable.Creator<SavedState> CREATOR
