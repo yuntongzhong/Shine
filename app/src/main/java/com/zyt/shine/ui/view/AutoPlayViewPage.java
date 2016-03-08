@@ -8,6 +8,7 @@ import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -29,9 +30,10 @@ import java.util.List;
 /**
  * Created by zyt on 2016/2/29.
  * <p/>
- * <p>无限自动轮播viewpage</p>
+ * <p>无限自动轮播控件AutoPlayViewPage</p>
  * <p>显示的页数应小于等于最大缓存页数的2倍，否则在刷新时会引发ANR异常</p>
- * <p>设置viewpage的最大缓存页数的方法为 mViewPager.setOffscreenPageLimit(5);</p>
+ * <p>设置viewpage的最大缓存页数的方法为 mViewPager.setOffscreenPageLimit(5)</p>
+ * <p>与swipeRefreshLayout同时同时使用时，使用setSwipeRefreshLayoutTouch()解决滑动冲突</p>
  */
 public class AutoPlayViewPage extends FrameLayout {
     /**
@@ -230,7 +232,7 @@ public class AutoPlayViewPage extends FrameLayout {
      */
     public void setCurrentItem(int item) {
         if (mViewPager != null) {
-            mViewPager.setCurrentItem(item % mCount);
+            mViewPager.setCurrentItem(item);
         }
     }
 
@@ -371,6 +373,32 @@ public class AutoPlayViewPage extends FrameLayout {
      */
     private void stopImageCycle() {
         handler.removeCallbacksAndMessages(null);
+    }
+
+    /**
+     * 当使用SwipeRefreshLayout作为外层布局时，使用此方法来解决滑动冲突
+     *
+     * @param swipeRefreshLayout
+     */
+    public void setSwipeRefreshLayoutTouch(final SwipeRefreshLayout swipeRefreshLayout) {
+        if (swipeRefreshLayout == null) {
+            return;
+        }
+        this.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_MOVE:
+                        swipeRefreshLayout.setEnabled(false);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        swipeRefreshLayout.setEnabled(true);
+                        break;
+                }
+                return false;
+            }
+        });
     }
 
 

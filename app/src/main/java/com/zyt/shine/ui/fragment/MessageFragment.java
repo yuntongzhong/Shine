@@ -78,21 +78,7 @@ public class MessageFragment extends Fragment {
                 }).start();
             }
         });
-        mImageCycleView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_MOVE:
-                        swipeRefreshLayout.setEnabled(false);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                    case MotionEvent.ACTION_CANCEL:
-                        swipeRefreshLayout.setEnabled(true);
-                        break;
-                }
-                return false;
-            }
-        });
+        mImageCycleView.setSwipeRefreshLayoutTouch(swipeRefreshLayout);
         return messageLayout;
     }
 
