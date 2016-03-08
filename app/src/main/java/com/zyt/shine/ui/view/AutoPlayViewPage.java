@@ -132,19 +132,8 @@ public class AutoPlayViewPage extends FrameLayout {
             }
             //数据刷新时what为1
             else if (mViewPager != null && msg.what == 1) {
-//                int current = mViewPager.getCurrentItem();//获取viewpage的当齐前位置
-//                int currentIndex = current % mCount;//当前实际位置
-//                int beforeIndex = currentIndex;//前面第一个的距离
-//                int afterIndex = mCount - currentIndex;//后面第一个的距离
-//                if (currentIndex == 0) {
-//                    mViewPager.setCurrentItem(current);
-//                } else if (beforeIndex < afterIndex) {
-//                    current = current - beforeIndex;
-//                } else {
-//                    current = current + afterIndex;
-//                }
                 mViewPager.setCurrentItem(getNearestIndication());
-                initIndication(true);
+                initIndication();
                 handler.sendEmptyMessageDelayed(mCycleDelayedMsg, mCycleDelayed);
             }
             return false;
@@ -203,7 +192,7 @@ public class AutoPlayViewPage extends FrameLayout {
             data.add(new ImageInfo("", "", ""));
             mCount = 1;
         }
-        initIndication(true);
+        initIndication();
         mViewPager.setOffscreenPageLimit(10);
         mViewPager.setAdapter(imageCycleAdapter = new ImageCycleAdapter());
         //最大值中间 的第一个
@@ -265,7 +254,7 @@ public class AutoPlayViewPage extends FrameLayout {
     /**
      * 初始化指标器
      */
-    private void initIndication(boolean isFirst) {
+    private void initIndication() {
         mIndicationGroup.removeAllViews();
         for (int i = 0; i < mCount; i++) {
             ImageView imageView = new ImageView(mContext);
@@ -274,7 +263,7 @@ public class AutoPlayViewPage extends FrameLayout {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(size, size);
             params.setMargins(margin, 0, margin, 0);
             imageView.setLayoutParams(params);
-            if (i == 0 && isFirst) {
+            if (i == 0) {
                 imageView.setBackgroundResource(R.drawable.dot_focused_shape);
             } else {
                 imageView.setBackgroundResource(R.drawable.dot_normal_shape);
