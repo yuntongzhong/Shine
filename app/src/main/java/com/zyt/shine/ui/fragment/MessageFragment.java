@@ -29,7 +29,7 @@ public class MessageFragment extends Fragment {
     List<AutoPlayViewPage.ImageInfo> list;
     List<AutoPlayViewPage.ImageInfo> listTest=new ArrayList<AutoPlayViewPage.ImageInfo>();
     Random random = new Random();
-    boolean isTest=false;
+    boolean isTest=true;
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -37,9 +37,9 @@ public class MessageFragment extends Fragment {
             switch (msg.what) {
                 case 1:
                     if(isTest){
-                        mImageCycleView.notifyDataChanged(listTest);
+                       mImageCycleView.notifyDataChanged(listTest);
                     }else {
-                        mImageCycleView.notifyDataChanged(list);
+                     mImageCycleView.notifyDataChanged(list);
                     }
                     isTest=!isTest;
                     swipeRefreshLayout.setRefreshing(false);
@@ -99,7 +99,6 @@ public class MessageFragment extends Fragment {
     private void initdata() {
         list = new ArrayList<AutoPlayViewPage.ImageInfo>();
         //res图片资源
-        //
         list.add(new AutoPlayViewPage.ImageInfo(R.mipmap.b, "扑树又回来啦！再唱经典老歌引万人大合唱", ""));
         list.add(new AutoPlayViewPage.ImageInfo(R.mipmap.c, "揭秘北京电影如何升级", ""));
         list.add(new AutoPlayViewPage.ImageInfo(R.mipmap.d, "乐视网TV版大派送", ""));

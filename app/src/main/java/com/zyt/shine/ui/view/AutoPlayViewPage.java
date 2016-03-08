@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * <p>无限自动轮播viewpage</p>
+ * <p/>
  * Created by zyt on 2016/2/29.
  */
 public class AutoPlayViewPage extends FrameLayout {
@@ -37,7 +39,7 @@ public class AutoPlayViewPage extends FrameLayout {
     /**
      * 图片轮播视图
      */
-    private ImageCycleViewPager mViewPager;
+    private ViewPager mViewPager;
     /**
      * 数据源
      */
@@ -84,11 +86,6 @@ public class AutoPlayViewPage extends FrameLayout {
 
     private ImageCycleAdapter imageCycleAdapter;
 
-    /**
-     * 是否没有数据
-     */
-    private boolean isNotData = false;
-
     public AutoPlayViewPage(Context context) {
         super(context);
         init(context);
@@ -115,12 +112,64 @@ public class AutoPlayViewPage extends FrameLayout {
     private void initView() {
         View.inflate(mContext, R.layout.auto_play_viewpage_view, this);
         FrameLayout fl_image_cycle = (FrameLayout) findViewById(R.id.fl_image_cycle);
-        mViewPager = new ImageCycleViewPager(mContext);
+        mViewPager = new ViewPager(mContext);
         mViewPager.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         fl_image_cycle.addView(mViewPager);
         mViewPager.addOnPageChangeListener(new ImageCyclePageChangeListener());
         mIndicationGroup = (LinearLayout) findViewById(R.id.ll_indication_group);
         mText = (TextView) findViewById(R.id.tv_title);
+    }
+
+    /**
+     * 实现自动轮播
+     */
+    private Handler handler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            if (mViewPager != null && msg.what == mCycleDelayedMsg) {
+                mViewPager.setCurrentItem((mViewPager.getCurrentItem() + 1));
+                handler.sendEmptyMessageDelayed(mCycleDelayedMsg, mCycleDelayed);
+            }
+            //数据刷新时what为1
+            else if (mViewPager != null && msg.what == 1) {
+//                int current = mViewPager.getCurrentItem();//获取viewpage的当齐前位置
+//                int currentIndex = current % mCount;//当前实际位置
+//                int beforeIndex = currentIndex;//前面第一个的距离
+//                int afterIndex = mCount - currentIndex;//后面第一个的距离
+//                if (currentIndex == 0) {
+//                    mViewPager.setCurrentItem(current);
+//                } else if (beforeIndex < afterIndex) {
+//                    current = current - beforeIndex;
+//                } else {
+//                    current = current + afterIndex;
+//                }
+                mViewPager.setCurrentItem(getNearestIndication());
+                initIndication(true);
+                handler.sendEmptyMessageDelayed(mCycleDelayedMsg, mCycleDelayed);
+            }
+            return false;
+        }
+    });
+
+    /**
+     * 获取与当前位置最近的位于第一位的点
+     *
+     * @return
+     */
+    private int getNearestIndication() {
+        int current = mViewPager.getCurrentItem();//获取viewpage的当齐前位置
+        int currentIndex = current % mCount;//当前实际位置
+        int beforeIndex = currentIndex;//前面第一个的距离
+        int afterIndex = mCount - currentIndex;//后面第一个的距离
+        if (currentIndex == 0) {
+            return current;
+        }
+        if (beforeIndex <= afterIndex) {
+            current = current - beforeIndex;
+        } else {
+            current = current + afterIndex;
+        }
+        return current;
     }
 
     /**
@@ -147,30 +196,30 @@ public class AutoPlayViewPage extends FrameLayout {
      * @param list 数据
      */
     public void loadData(List<ImageInfo> list) {
+        data.clear();
         data.addAll(list);
         mCount = list.size();
         if (list.size() == 0) {
             data.add(new ImageInfo("", "", ""));
             mCount = 1;
-            isNotData = true;
         }
-        initIndication();
+        initIndication(true);
+        mViewPager.setOffscreenPageLimit(10);
         mViewPager.setAdapter(imageCycleAdapter = new ImageCycleAdapter());
         //最大值中间 的第一个
         mViewPager.setCurrentItem(Integer.MAX_VALUE / 2 - ((Integer.MAX_VALUE / 2) % mCount));
     }
 
     public void notifyDataChanged(List<ImageInfo> list) {
-        if (list.size() == 0) {
+        stopImageCycle();
+        if (list.size() == 0 || list.isEmpty()) {
             return;
         }
         data.clear();
         data.addAll(list);
         mCount = data.size();
-        initIndication();
         imageCycleAdapter.notifyDataSetChanged();
-        //设置第一个点的样式为未选中
-        ((mIndicationGroup.getChildAt(0))).setBackgroundResource(R.drawable.dot_normal_shape);
+        handler.sendEmptyMessage(1);
     }
 
     /**
@@ -213,6 +262,26 @@ public class AutoPlayViewPage extends FrameLayout {
         setCurrentItem(ss.mCuurrentIndex);
     }
 
+    /**
+     * 初始化指标器
+     */
+    private void initIndication(boolean isFirst) {
+        mIndicationGroup.removeAllViews();
+        for (int i = 0; i < mCount; i++) {
+            ImageView imageView = new ImageView(mContext);
+            int size = DisplayUtil.dip2px(mContext, indicationSize);
+            int margin = DisplayUtil.dip2px(mContext, indicationMargin);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(size, size);
+            params.setMargins(margin, 0, margin, 0);
+            imageView.setLayoutParams(params);
+            if (i == 0 && isFirst) {
+                imageView.setBackgroundResource(R.drawable.dot_focused_shape);
+            } else {
+                imageView.setBackgroundResource(R.drawable.dot_normal_shape);
+            }
+            mIndicationGroup.addView(imageView);
+        }
+    }
 
     /**
      * 轮播控件的监听事件
@@ -228,39 +297,21 @@ public class AutoPlayViewPage extends FrameLayout {
     }
 
     /**
-     * 初始化指标器
+     * 图片信息类
      */
-    private void initIndication() {
-        mIndicationGroup.removeAllViews();
-        for (int i = 0; i < mCount; i++) {
-            ImageView imageView = new ImageView(mContext);
-            int size = DisplayUtil.dip2px(mContext, indicationSize);
-            int margin = DisplayUtil.dip2px(mContext, indicationMargin);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(size, size);
-            params.setMargins(margin, 0, margin, 0);
-            imageView.setLayoutParams(params);
-            if (i == 0) {
-                imageView.setBackgroundResource(R.drawable.dot_focused_shape);
-            } else {
-                imageView.setBackgroundResource(R.drawable.dot_normal_shape);
-            }
-            mIndicationGroup.addView(imageView);
-        }
-    }
-
     public static class ImageInfo implements Parcelable {
         public Object image;
-        public String text = "";
+        public String title = "";
         public Object value;
 
         public ImageInfo(Object image, String text, Object value) {
             this.image = image;
-            this.text = text;
+            this.title = text;
             this.value = value;
         }
 
         protected ImageInfo(Parcel in) {
-            text = in.readString();
+            title = in.readString();
         }
 
         public static final Creator<ImageInfo> CREATOR = new Creator<ImageInfo>() {
@@ -282,7 +333,7 @@ public class AutoPlayViewPage extends FrameLayout {
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
-            dest.writeString(text);
+            dest.writeString(title);
         }
     }
 
@@ -290,16 +341,15 @@ public class AutoPlayViewPage extends FrameLayout {
      * 轮播图片监听
      */
     private final class ImageCyclePageChangeListener implements OnPageChangeListener {
-        /**
-         * 上次指示器指示的位置,开始为默认位置0
-         */
+
+        //上次指示器指示的位置,开始为默认位置0
         private int preIndex = 0;
 
         @Override
         public void onPageSelected(int index) {
             index = index % mCount;
             //更新文本信息
-            String text = data.get(index).text;
+            String text = data.get(index).title;
             mText.setText(TextUtils.isEmpty(text) ? "" : text);
             //恢复默认没有获得焦点指示器样式
             ((mIndicationGroup.getChildAt(preIndex))).setBackgroundResource(R.drawable.dot_normal_shape);
@@ -314,6 +364,61 @@ public class AutoPlayViewPage extends FrameLayout {
 
         @Override
         public void onPageScrolled(int arg0, float arg1, int arg2) {
+        }
+    }
+
+    /**
+     * 开始图片轮播
+     */
+    private void startImageCycle() {
+        handler.sendEmptyMessageDelayed(mCycleDelayedMsg, mCycleDelayed);
+    }
+
+    /**
+     * 暂停图片轮播
+     */
+    private void stopImageCycle() {
+        handler.removeCallbacksAndMessages(null);
+    }
+
+
+    /**
+     * 触摸停止计时器，抬起启动计时器
+     */
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_UP || ev.getAction() == MotionEvent.ACTION_CANCEL) {
+            if (isAutoCycle) {
+                // 开始图片滚动
+                startImageCycle();
+            }
+        } else {
+            if (isAutoCycle) {
+                // 停止图片滚动
+                stopImageCycle();
+            }
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
+    /**
+     * view销毁时调用此方法
+     */
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        // 停止图片滚动
+        stopImageCycle();
+    }
+
+    /**
+     * onAttachedToWindow是在第一次onDraw前调用的
+     */
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        if (isAutoCycle) {
+            startImageCycle();
         }
     }
 
@@ -357,151 +462,32 @@ public class AutoPlayViewPage extends FrameLayout {
         public boolean isViewFromObject(View view, Object obj) {
             return view == obj;
         }
-    }
+
+        private int mChildCount = 0;
 
 
-    /**
-     * 开始图片轮播
-     */
-    private void startImageCycle() {
-        handler.sendEmptyMessageDelayed(mCycleDelayedMsg, mCycleDelayed);
-    }
-
-    /**
-     * 暂停图片轮播
-     */
-    private void stopImageCycle() {
-        handler.removeCallbacksAndMessages(null);
-    }
-
-    /**
-     * 实现自动轮播
-     */
-    private Handler handler = new Handler(new Handler.Callback() {
         @Override
-        public boolean handleMessage(Message msg) {
-            if (mViewPager != null && msg.what == mCycleDelayedMsg) {
-                mViewPager.setCurrentItem((mViewPager.getCurrentItem() + 1));
-                handler.sendEmptyMessageDelayed(mCycleDelayedMsg, mCycleDelayed);
-            } else if (mViewPager != null && msg.what == 1) {
-                //数据刷新时what为1
-                mViewPager.setCurrentItem(Integer.MAX_VALUE / 2 - ((Integer.MAX_VALUE / 2) % mCount));
-            }
-            return false;
-        }
-    });
+        public void notifyDataSetChanged() {
+            mChildCount = getCount();
+            super.notifyDataSetChanged();
 
-    /**
-     * 触摸停止计时器，抬起启动计时器
-     */
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        if (ev.getAction() == MotionEvent.ACTION_UP || ev.getAction() == MotionEvent.ACTION_CANCEL) {
-            if (isAutoCycle) {
-                // 开始图片滚动
-                startImageCycle();
-            }
-        } else {
-            if (isAutoCycle) {
-                // 停止图片滚动
-                stopImageCycle();
-            }
-        }
-        return super.dispatchTouchEvent(ev);
-    }
-
-    /**
-     * view销毁时调用此方法
-     */
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        // 停止图片滚动
-        stopImageCycle();
-    }
-
-    /**
-     * onAttachedToWindow是在第一次onDraw前调用的
-     */
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        if (isAutoCycle) {
-            startImageCycle();
-        }
-    }
-
-    /**
-     * 自定义ViewPager主要用于事件处理
-     */
-    public class ImageCycleViewPager extends ViewPager {
-
-        public ImageCycleViewPager(Context context) {
-            super(context);
-        }
-
-        public ImageCycleViewPager(Context context, AttributeSet attrs) {
-            super(context, attrs);
-        }
-
-         /**
-         * 事件拦截
-         */
-        @Override
-        public boolean onInterceptTouchEvent(MotionEvent ev) {
-            return super.onInterceptTouchEvent(ev);
-        }
-//        @Override
-//        public boolean onInterceptTouchEvent(MotionEvent event) {
-//            float preX = 0;
-//            boolean res = super.onInterceptTouchEvent(event);
-//            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-//                preX = event.getX();
-//            } else {
-//                if (Math.abs(event.getX() - preX) > 4) {
-//                    return true;
-//                } else {
-//                    preX = event.getX();
-//                }
-//            }
-//            return res;
-//        }
-
-        /**
-         * 事件分发
-         */
-        @Override
-        public boolean dispatchTouchEvent(MotionEvent ev) {
-            // getParent().requestDisallowInterceptTouchEvent(true);
-            return super.dispatchTouchEvent(ev);
         }
 
         /**
-         * 事件处理
+         * 覆盖getItemPosition()方法，当调用notifyDataSetChanged时，
+         * 让getItemPosition方法人为的返回POSITION_NONE，
+         * 从而达到强迫viewpager重绘所有item的目的。
+         *
+         * @param object
+         * @return
          */
         @Override
-        public boolean onTouchEvent(MotionEvent ev) {
-//            float mDownX = 0;
-//            float mDownY = 0;
-//            switch (ev.getAction()) {
-//                case MotionEvent.ACTION_DOWN:
-//                    mDownX = ev.getX();
-//                    mDownY = ev.getY();
-//                    getParent().requestDisallowInterceptTouchEvent(true);
-//                    break;
-//                case MotionEvent.ACTION_MOVE:
-//                    float moveX = Math.abs(ev.getX() - mDownX);
-//                    float moveY = Math.abs(ev.getY() - mDownY);
-//                    if (moveX > moveY) {
-//                        getParent().requestDisallowInterceptTouchEvent(true);
-//                    } else {
-//                        getParent().requestDisallowInterceptTouchEvent(false);
-//                    }
-//                    break;
-//                default:
-//                    break;
-//            }
-            return super.onTouchEvent(ev);
+        public int getItemPosition(Object object) {
+            if (mChildCount > 0) {
+                mChildCount--;
+                return POSITION_NONE;
+            }
+            return super.getItemPosition(object);
         }
     }
 
