@@ -41,7 +41,7 @@ public class AutoPlayViewPage extends FrameLayout {
     /**
      * 数据源
      */
-    private List<ImageInfo> data= new ArrayList<ImageInfo>();
+    private List<ImageInfo> data = new ArrayList<ImageInfo>();
     /**
      * 加载图片回调函数
      */
@@ -87,7 +87,7 @@ public class AutoPlayViewPage extends FrameLayout {
     /**
      * 是否没有数据
      */
-    private boolean isNotData=false;
+    private boolean isNotData = false;
 
     public AutoPlayViewPage(Context context) {
         super(context);
@@ -152,16 +152,16 @@ public class AutoPlayViewPage extends FrameLayout {
         if (list.size() == 0) {
             data.add(new ImageInfo("", "", ""));
             mCount = 1;
-            isNotData=true;
+            isNotData = true;
         }
         initIndication();
-        mViewPager.setAdapter(imageCycleAdapter=new ImageCycleAdapter());
+        mViewPager.setAdapter(imageCycleAdapter = new ImageCycleAdapter());
         //最大值中间 的第一个
         mViewPager.setCurrentItem(Integer.MAX_VALUE / 2 - ((Integer.MAX_VALUE / 2) % mCount));
     }
 
     public void notifyDataChanged(List<ImageInfo> list) {
-        if(list.size()==0){
+        if (list.size() == 0) {
             return;
         }
         data.clear();
@@ -248,7 +248,7 @@ public class AutoPlayViewPage extends FrameLayout {
         }
     }
 
-    public static class ImageInfo implements Parcelable{
+    public static class ImageInfo implements Parcelable {
         public Object image;
         public String text = "";
         public Object value;
@@ -383,7 +383,7 @@ public class AutoPlayViewPage extends FrameLayout {
             if (mViewPager != null && msg.what == mCycleDelayedMsg) {
                 mViewPager.setCurrentItem((mViewPager.getCurrentItem() + 1));
                 handler.sendEmptyMessageDelayed(mCycleDelayedMsg, mCycleDelayed);
-            }else if(mViewPager != null && msg.what == 1){
+            } else if (mViewPager != null && msg.what == 1) {
                 //数据刷新时what为1
                 mViewPager.setCurrentItem(Integer.MAX_VALUE / 2 - ((Integer.MAX_VALUE / 2) % mCount));
             }
@@ -444,20 +444,35 @@ public class AutoPlayViewPage extends FrameLayout {
             super(context, attrs);
         }
 
-        /**
+         /**
          * 事件拦截
          */
         @Override
         public boolean onInterceptTouchEvent(MotionEvent ev) {
             return super.onInterceptTouchEvent(ev);
         }
+//        @Override
+//        public boolean onInterceptTouchEvent(MotionEvent event) {
+//            float preX = 0;
+//            boolean res = super.onInterceptTouchEvent(event);
+//            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//                preX = event.getX();
+//            } else {
+//                if (Math.abs(event.getX() - preX) > 4) {
+//                    return true;
+//                } else {
+//                    preX = event.getX();
+//                }
+//            }
+//            return res;
+//        }
 
         /**
          * 事件分发
          */
         @Override
         public boolean dispatchTouchEvent(MotionEvent ev) {
-        // getParent().requestDisallowInterceptTouchEvent(true);
+            // getParent().requestDisallowInterceptTouchEvent(true);
             return super.dispatchTouchEvent(ev);
         }
 
@@ -466,26 +481,26 @@ public class AutoPlayViewPage extends FrameLayout {
          */
         @Override
         public boolean onTouchEvent(MotionEvent ev) {
-            float mDownX = 0;
-            float mDownY = 0;
-            switch (ev.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    mDownX = ev.getX();
-                    mDownY = ev.getY();
-                    getParent().requestDisallowInterceptTouchEvent(true);
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    float moveX = Math.abs(ev.getX() - mDownX);
-                    float moveY = Math.abs(ev.getY() - mDownY);
-                    if (moveX > moveY) {
-                        getParent().requestDisallowInterceptTouchEvent(true);
-                    } else {
-                        getParent().requestDisallowInterceptTouchEvent(false);
-                    }
-                    break;
-                default:
-                    break;
-            }
+//            float mDownX = 0;
+//            float mDownY = 0;
+//            switch (ev.getAction()) {
+//                case MotionEvent.ACTION_DOWN:
+//                    mDownX = ev.getX();
+//                    mDownY = ev.getY();
+//                    getParent().requestDisallowInterceptTouchEvent(true);
+//                    break;
+//                case MotionEvent.ACTION_MOVE:
+//                    float moveX = Math.abs(ev.getX() - mDownX);
+//                    float moveY = Math.abs(ev.getY() - mDownY);
+//                    if (moveX > moveY) {
+//                        getParent().requestDisallowInterceptTouchEvent(true);
+//                    } else {
+//                        getParent().requestDisallowInterceptTouchEvent(false);
+//                    }
+//                    break;
+//                default:
+//                    break;
+//            }
             return super.onTouchEvent(ev);
         }
     }
@@ -494,10 +509,12 @@ public class AutoPlayViewPage extends FrameLayout {
      * 用于保存view的状态
      */
     static class SavedState extends BaseSavedState {
-        int mCuurrentIndex=0;
+        int mCuurrentIndex = 0;
+
         SavedState(Parcelable superState) {
             super(superState);
         }
+
         private SavedState(Parcel in) {
             super(in);
             mCuurrentIndex = in.readInt();

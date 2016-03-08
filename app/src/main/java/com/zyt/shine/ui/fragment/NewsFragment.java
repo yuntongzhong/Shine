@@ -65,7 +65,6 @@ public class NewsFragment extends Fragment {
                 R.color.colorAccent,
                 R.color.slateblue);
         afterViews();
-
         return newsLayout;
     }
 
