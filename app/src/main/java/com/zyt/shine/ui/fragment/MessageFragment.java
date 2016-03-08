@@ -103,11 +103,23 @@ public class MessageFragment extends Fragment {
         list.add(new AutoPlayViewPage.ImageInfo(R.mipmap.c, "揭秘北京电影如何升级", ""));
         list.add(new AutoPlayViewPage.ImageInfo(R.mipmap.d, "乐视网TV版大派送", ""));
         list.add(new AutoPlayViewPage.ImageInfo(R.mipmap.e, "热血屌丝的反杀", ""));
+        list.add(new AutoPlayViewPage.ImageInfo(R.mipmap.b, "扑树又回来啦！再唱经典老歌引万人大合唱", ""));
+        list.add(new AutoPlayViewPage.ImageInfo(R.mipmap.c, "揭秘北京电影如何升级", ""));
+        list.add(new AutoPlayViewPage.ImageInfo(R.mipmap.d, "乐视网TV版大派送", ""));
+        list.add(new AutoPlayViewPage.ImageInfo(R.mipmap.e, "热血屌丝的反杀", ""));
+        list.add(new AutoPlayViewPage.ImageInfo(R.mipmap.b, "扑树又回来啦！再唱经典老歌引万人大合唱", ""));
+        list.add(new AutoPlayViewPage.ImageInfo(R.mipmap.c, "揭秘北京电影如何升级", ""));
 
         listTest.add(new AutoPlayViewPage.ImageInfo("http://img2.imgtn.bdimg.com/it/u=3922277475,817684749&fm=21&gp=0.jpg", "网络图片1", ""));
         listTest.add(new AutoPlayViewPage.ImageInfo("http://pic13.nipic.com/20110415/1347158_132411659346_2.jpg", "网络图片2", ""));
         listTest.add(new AutoPlayViewPage.ImageInfo("http://pic14.nipic.com/20110522/7411759_164157418126_2.jpg", "网络图片3", ""));
         listTest.add(new AutoPlayViewPage.ImageInfo("http://pic1.ooopic.com/uploadfilepic/sheji/2009-05-05/OOOPIC_vip4_20090505079ae095187332ea.jpg", "网络图片4", ""));
+        listTest.add(new AutoPlayViewPage.ImageInfo("http://img2.imgtn.bdimg.com/it/u=3922277475,817684749&fm=21&gp=0.jpg", "网络图片1", ""));
+        listTest.add(new AutoPlayViewPage.ImageInfo("http://pic13.nipic.com/20110415/1347158_132411659346_2.jpg", "网络图片2", ""));
+        listTest.add(new AutoPlayViewPage.ImageInfo("http://pic14.nipic.com/20110522/7411759_164157418126_2.jpg", "网络图片3", ""));
+        listTest.add(new AutoPlayViewPage.ImageInfo("http://pic1.ooopic.com/uploadfilepic/sheji/2009-05-05/OOOPIC_vip4_20090505079ae095187332ea.jpg", "网络图片4", ""));
+        listTest.add(new AutoPlayViewPage.ImageInfo("http://img2.imgtn.bdimg.com/it/u=3922277475,817684749&fm=21&gp=0.jpg", "网络图片1", ""));
+        listTest.add(new AutoPlayViewPage.ImageInfo("http://pic13.nipic.com/20110415/1347158_132411659346_2.jpg", "网络图片2", ""));
     }
 
     @Override

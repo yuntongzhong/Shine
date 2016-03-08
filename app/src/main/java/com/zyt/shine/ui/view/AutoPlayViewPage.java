@@ -27,9 +27,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <p>无限自动轮播viewpage</p>
- * <p/>
  * Created by zyt on 2016/2/29.
+ * <p/>
+ * <p>无限自动轮播viewpage</p>
+ * <p>显示的页数应小于等于最大缓存页数的2倍，否则在刷新时会引发ANR异常</p>
+ * <p>设置viewpage的最大缓存页数的方法为 mViewPager.setOffscreenPageLimit(5);</p>
  */
 public class AutoPlayViewPage extends FrameLayout {
     /**
@@ -193,7 +195,8 @@ public class AutoPlayViewPage extends FrameLayout {
             mCount = 1;
         }
         initIndication();
-        mViewPager.setOffscreenPageLimit(10);
+        //设置最大缓存页数，显示的页数应小于等于此数的2倍，否则在刷新时会引发ANR异常
+        mViewPager.setOffscreenPageLimit(5);
         mViewPager.setAdapter(imageCycleAdapter = new ImageCycleAdapter());
         //最大值中间 的第一个
         mViewPager.setCurrentItem(Integer.MAX_VALUE / 2 - ((Integer.MAX_VALUE / 2) % mCount));
