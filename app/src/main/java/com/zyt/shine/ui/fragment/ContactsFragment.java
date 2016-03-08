@@ -58,7 +58,6 @@ public class ContactsFragment extends Fragment {
             }
         }
     };
-   // private View contactsLayout;// 缓存Fragment view
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -115,7 +114,6 @@ public class ContactsFragment extends Fragment {
         return contactsLayout;
     }
 
-
     private void initdata() {
             list.add(new NewsEntity("http://f.hiphotos.baidu.com/baike/w%3D268/sign=5677eff4a51ea8d38a227302af0b30cf/7c1ed21b0ef41bd5c8e3b0bb52da81cb38db3dc8.jpg", "小白", "www.小白.com", "今天阳光明媚", DataUtils.getDate()));
             list.add(new NewsEntity("http://img1.3lian.com/img2008/06/019/ych.jpg", "晓明", "www.晓明.com", "我在嘉兴", DataUtils.getDate()));
@@ -126,25 +124,6 @@ public class ContactsFragment extends Fragment {
             listTest.add(new AutoPlayViewPage.ImageInfo(R.mipmap.c, "揭秘北京电影如何升级", ""));
             listTest.add(new AutoPlayViewPage.ImageInfo("http://img2.imgtn.bdimg.com/it/u=3922277475,817684749&fm=21&gp=0.jpg", "乐视网TV版大派送", ""));
             listTest.add(new AutoPlayViewPage.ImageInfo(R.mipmap.e, "热血屌丝的反杀", ""));
-
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList("listString", list);
-        Log.e("ContactsFragment","onSaveInstanceState");
-    }
-
-    @Override
-    public void onViewStateRestored(Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-        Log.e("ContactsFragment", "onViewStateRestored");
-
-        if(savedInstanceState != null){
-            ArrayList<NewsEntity> list2=savedInstanceState.getParcelableArrayList("listString");
-            Log.e("ContactsFragment","数据长度为："+list2.size());
-        }
     }
 
     @Override

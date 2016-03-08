@@ -23,17 +23,14 @@ import java.util.List;
 public class NewsFragment extends Fragment {
 
     private final long REFRESH_DELAY = 3000;
-
     private AutoPlayViewPage mImageCycleView;
     SwipeRefreshLayout swipeRefreshLayout;
     ArrayAdapter arrayAdapter;
     ListView listView;
-    List<String> listString =new ArrayList<String>();
+    List<String> listString = new ArrayList<String>();
     List<AutoPlayViewPage.ImageInfo> listImg = new ArrayList<AutoPlayViewPage.ImageInfo>();
-//    String arr[] = {"1234", "56789", "dsad", "asduwyah", "1234", "56789", "dsad",
-//            "asduwyah", "1234", "56789", "dsad", "asduwyah"};
 
-    private Handler mHandler = new Handler(){
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -56,13 +53,13 @@ public class NewsFragment extends Fragment {
         ViewGroup newsLayout = (ViewGroup) inflater.inflate(R.layout.news_fragment, container,
                 false);
         listView = (ListView) newsLayout.findViewById(R.id.list_view);
-        ViewGroup headerGroup= (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.header_list_layout, null, false);
+        ViewGroup headerGroup = (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.header_list_layout, null, false);
         listView.addHeaderView(headerGroup);
         mImageCycleView = (AutoPlayViewPage) headerGroup.findViewById(R.id.news_auto_play);
         mImageCycleView.loadData(listImg);
-        arrayAdapter=new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, listString);
+        arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, listString);
         listView.setAdapter(arrayAdapter);
-        swipeRefreshLayout= (SwipeRefreshLayout) newsLayout.findViewById(R.id.news_refresh);
+        swipeRefreshLayout = (SwipeRefreshLayout) newsLayout.findViewById(R.id.news_refresh);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark,
                 R.color.mediumturquoise,
                 R.color.colorAccent,
@@ -84,9 +81,9 @@ public class NewsFragment extends Fragment {
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                        Message message=mHandler.obtainMessage();
-                        message.what=1;
-                        message.obj="新增数据"+ listString.size();
+                        Message message = mHandler.obtainMessage();
+                        message.what = 1;
+                        message.obj = "新增数据" + listString.size();
                         mHandler.sendMessage(message);
                     }
                 }).start();
@@ -100,10 +97,9 @@ public class NewsFragment extends Fragment {
         listImg.add(new AutoPlayViewPage.ImageInfo(R.mipmap.c, "揭秘北京电影如何升级", ""));
         listImg.add(new AutoPlayViewPage.ImageInfo(R.mipmap.d, "乐视网TV版大派送", ""));
         listImg.add(new AutoPlayViewPage.ImageInfo(R.mipmap.e, "热血屌丝的反杀", ""));
-        for (int i=0;i<5;i++){
+        for (int i = 0; i < 5; i++) {
             this.listString.add("数据");
         }
-
     }
 
     @Override

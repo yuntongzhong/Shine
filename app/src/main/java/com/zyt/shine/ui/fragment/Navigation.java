@@ -44,7 +44,4 @@ public enum Navigation {
         this.resIcon = resIcon;
         this.clz = clz;
     }
-
-
-
 }

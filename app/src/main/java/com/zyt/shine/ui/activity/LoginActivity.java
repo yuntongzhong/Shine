@@ -52,9 +52,7 @@ public class LoginActivity extends AppCompatActivity {
     Button loginBtn;
     @ViewById(R.id.myImage)
     ImageView icon;
-    OkHttpClient okHttpClient;
     //http://gaoxiao.jokeji.cn/GrapHtml/dongtai/20120921221658.htm
-//
     String url = "http://www.quanjing.com/imgbuy/488-0145.html";
     List<String> inmUrl;
 
@@ -80,7 +78,6 @@ public class LoginActivity extends AppCompatActivity {
             public void onFailure(Call call, IOException e) {
 
             }
-
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String str = response.body().string();
@@ -125,16 +122,10 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 break;
-//            case R.id.action_settings:
-//                break;
             default:
                 break;
         }
