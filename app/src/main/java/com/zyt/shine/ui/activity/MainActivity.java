@@ -97,6 +97,9 @@ public class MainActivity extends AppCompatActivity
         icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                }
                 Intent intent = new Intent(MainActivity.this, LoginActivity_.class);
                 startActivity(intent);
             }

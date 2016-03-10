@@ -1,11 +1,7 @@
 package com.zyt.shine.ui.activity;
 
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -14,13 +10,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.zyt.shine.R;
 import com.zyt.shine.glide.GlideCircleTransform;
-import com.zyt.shine.glide.GlideRoundTransform;
 import com.zyt.shine.utils.ImmersedStatusbarUtils;
 
 import org.androidannotations.annotations.AfterViews;
@@ -38,13 +29,12 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
  * Created by zyt on 2015/11/20.
  */
-@EActivity(R.layout.login_activity)
+@EActivity(R.layout.activity_login)
 public class LoginActivity extends AppCompatActivity {
     @ViewById(R.id.toolbar)
     Toolbar toolbar;
@@ -64,6 +54,11 @@ public class LoginActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("用户登录");
         getHtmlStr(url);
+    }
+
+    @Click(R.id.myImage)
+  void  clickIcon(){
+        startActivity(new Intent(this,PersonInfoActivity.class));
     }
 
     private void getHtmlStr(String url) {

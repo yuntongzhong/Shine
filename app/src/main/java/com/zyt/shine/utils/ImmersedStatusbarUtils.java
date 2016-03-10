@@ -4,11 +4,13 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
 import com.readystatesoftware.systembartint.SystemBarTintManager;
+import com.zyt.shine.R;
 
 /**
  * 改变状态栏颜色
@@ -35,9 +37,9 @@ public class ImmersedStatusbarUtils {
             return;
        SystemBarTintManager tintManager;
         tintManager = new SystemBarTintManager(activity);
-        int color = Color.parseColor(titleViewGroup.getTag().toString());
-        //ContextCompat.getColor(activity, R.color.colorAccent)
-        tintManager.setStatusBarTintColor(color);
+        //int color = Color.parseColor(titleViewGroup.getTag().toString());
+       // ContextCompat.getColor(activity, R.color.colorAccent)
+        tintManager.setStatusBarTintColor(ContextCompat.getColor(activity, R.color.colorPrimaryDark));
         tintManager.setStatusBarTintEnabled(true);
     }
 }
