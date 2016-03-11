@@ -57,8 +57,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @Click(R.id.myImage)
-  void  clickIcon(){
-        startActivity(new Intent(this,PersonInfoActivity.class));
+    void clickIcon() {
+        startActivity(new Intent(this, PersonInfoActivity.class));
     }
 
     private void getHtmlStr(String url) {
@@ -73,6 +73,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onFailure(Call call, IOException e) {
 
             }
+
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String str = response.body().string();

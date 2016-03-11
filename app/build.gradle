@@ -30,6 +30,7 @@ dependencies {
     compile 'com.squareup.okio:okio:1.6.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.bartoszlipinski.recyclerviewheader:library:1.2.1'
+    compile 'com.android.support:cardview-v7:23.1.1'
 
 
     apt "org.androidannotations:androidannotations:$AAVersion"

@@ -12,8 +12,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.method.LinkMovementMethod;
 import android.text.style.BackgroundColorSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.URLSpan;
@@ -32,6 +35,7 @@ import com.zyt.shine.R;
 import com.zyt.shine.entity.LoginInfoEntity;
 import com.zyt.shine.glide.GlideCircleTransform;
 import com.zyt.shine.ui.fragment.Navigation;
+import com.zyt.shine.ui.view.MyURLSpan;
 import com.zyt.shine.utils.ImmersedStatusbarUtils;
 
 public class MainActivity extends AppCompatActivity
@@ -92,8 +96,12 @@ public class MainActivity extends AppCompatActivity
         icon = (ImageView) headerView.findViewById(R.id.head_portrait);
         TextView userName = (TextView) headerView.findViewById(R.id.user_name);
         TextView personalProfile = (TextView) headerView.findViewById(R.id.personal_profile);
+
+
         userName.setText(loginInfo.getUserName());
         personalProfile.setText(loginInfo.getPersonalProfile());
+
+        setText(personalProfile);
         icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,6 +116,38 @@ public class MainActivity extends AppCompatActivity
                 .centerCrop()
                 .transform(new GlideCircleTransform(this))
                 .into(icon);
+    }
+
+    private void setText(TextView textView){
+        StringBuilder sb = new StringBuilder();
+        sb.append("个人信息");
+        sb.append("<a href=address" + ">"
+                + "地址</a>");
+
+        sb.append("<a href=name" + ">"
+                + "名字</a>");
+
+        textView.setText(Html.fromHtml(sb.toString()));
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
+        textView.setHighlightColor(Color.TRANSPARENT);//去掉点击后的蓝色背景
+
+        CharSequence text = textView.getText();
+        if (text instanceof Spannable) {
+            int end = text.length();
+            Spannable sp = (Spannable) textView.getText();
+            URLSpan[] urls = sp.getSpans(0, end, URLSpan.class);
+            SpannableStringBuilder style = new SpannableStringBuilder(text);
+            style.clearSpans();// should clear old spans
+
+            // 循环把链接发过去
+            for (URLSpan url : urls) {
+                MyURLSpan myURLSpan = new MyURLSpan(this,url.getURL());
+                style.setSpan(myURLSpan, sp.getSpanStart(url),
+                        sp.getSpanEnd(url), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+            }
+            textView.setText(style);
+        }
+
     }
 
     /**
