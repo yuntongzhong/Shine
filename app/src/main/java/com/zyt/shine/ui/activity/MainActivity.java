@@ -14,11 +14,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
-import android.text.style.BackgroundColorSpan;
-import android.text.style.ForegroundColorSpan;
 import android.text.style.URLSpan;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -31,20 +28,20 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.zyt.shine.R;
-
 import com.zyt.shine.entity.LoginInfoEntity;
 import com.zyt.shine.glide.GlideCircleTransform;
 import com.zyt.shine.ui.fragment.Navigation;
 import com.zyt.shine.ui.view.MyURLSpan;
+import com.zyt.shine.ui.view.TwoBtnFragmentDialog;
 import com.zyt.shine.utils.ImmersedStatusbarUtils;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private FragmentTabHost mFragmentTabHost;
 
-    ImageView icon;
-    DrawerLayout drawerLayout;
+    private ImageView icon;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +64,7 @@ public class MainActivity extends AppCompatActivity
         drawerLayout.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         //默认选中
         navigationView.setCheckedItem(R.id.nav_camera);
         View headerView = navigationView.getHeaderView(0);
@@ -76,7 +73,7 @@ public class MainActivity extends AppCompatActivity
         //设置侧滑菜单的监听事件
         navigationView.setNavigationItemSelectedListener(this);
 
-        mFragmentTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
+        FragmentTabHost mFragmentTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
         mFragmentTabHost.setup(getApplicationContext(), getSupportFragmentManager(), R.id.realtabcontent);
         Navigation[] navigations = Navigation.values();
 
@@ -118,7 +115,7 @@ public class MainActivity extends AppCompatActivity
                 .into(icon);
     }
 
-    private void setText(TextView textView){
+    private void setText(TextView textView) {
         StringBuilder sb = new StringBuilder();
         sb.append("个人信息");
         sb.append("<a href=address" + ">"
@@ -141,7 +138,7 @@ public class MainActivity extends AppCompatActivity
 
             // 循环把链接发过去
             for (URLSpan url : urls) {
-                MyURLSpan myURLSpan = new MyURLSpan(this,url.getURL());
+                MyURLSpan myURLSpan = new MyURLSpan(this, url.getURL());
                 style.setSpan(myURLSpan, sp.getSpanStart(url),
                         sp.getSpanEnd(url), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
             }
@@ -199,6 +196,9 @@ public class MainActivity extends AppCompatActivity
             // Handle the camera action
             // setTabSelection(0);
         } else if (id == R.id.nav_gallery) {
+            TwoBtnFragmentDialog dialog=new TwoBtnFragmentDialog();
+            dialog.setMsg("login").setTitle("title");
+            dialog.show(getFragmentManager(),"test");
 
         } else if (id == R.id.nav_slideshow) {
 

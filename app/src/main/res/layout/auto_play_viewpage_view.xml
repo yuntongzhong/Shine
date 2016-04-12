@@ -27,8 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="10dp"
             android:gravity="center_horizontal"
-            android:orientation="horizontal"
-            android:paddingRight="15dp">
+            android:orientation="horizontal">
         </LinearLayout>
     </LinearLayout>
 

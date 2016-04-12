@@ -4,13 +4,8 @@ package com.zyt.shine.entity;
  * Created by zyt on 2016/3/4.
  */
 
-import android.graphics.drawable.Icon;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-
-import java.io.Serializable;
 
 /**
  * 推荐实体类
@@ -74,12 +69,12 @@ public class NewsEntity implements Parcelable {
 
     private String releaseTime;
 
-    public NewsEntity(Object icon, String name, String url, String msg,String releaseTime) {
+    public NewsEntity(Object icon, String name, String url, String msg, String releaseTime) {
         this.icon = icon;
         this.name = name;
         this.url = url;
         this.msg = msg;
-        this.releaseTime=releaseTime;
+        this.releaseTime = releaseTime;
     }
 
 

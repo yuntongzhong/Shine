@@ -1,5 +1,4 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/gainsboro">
@@ -20,8 +19,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="30dip"
-        android:layout_marginRight="30dip"
+        android:layout_marginStart="30dip"
+        android:layout_marginEnd="30dip"
         android:layout_marginTop="15dip">
 
         <EditText
@@ -40,8 +39,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
        android:layout_below="@+id/account_number"
-        android:layout_marginLeft="30dip"
-        android:layout_marginRight="30dip">
+        android:layout_marginStart="30dip"
+        android:layout_marginEnd="30dip">
 
         <EditText
             android:layout_width="match_parent"
@@ -56,11 +55,12 @@
         android:id="@+id/login_button"
         android:layout_width="match_parent"
         android:layout_height="35dip"
-        android:layout_alignLeft="@id/account_number"
-        android:layout_alignRight="@id/account_number"
+        android:background="@drawable/btn_selector"
+        android:layout_alignStart="@id/account_number"
+        android:layout_alignEnd="@id/account_number"
         android:layout_below="@+id/password"
         android:layout_marginTop="20dp"
-        android:background="@drawable/btn_selector"
+
         android:text="登录"
         android:textColor="@drawable/bt_text_color" />
 
@@ -69,8 +69,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="45dip"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="45dip"
         android:gravity="bottom"
         android:text="找回密码"
         android:textColor="@drawable/bt_text_color"
@@ -81,8 +81,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="45dip"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="45dip"
         android:layout_marginTop="5dip"
         android:gravity="bottom"
         android:text="注册账号"

@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.zyt.shine.R;
 import com.zyt.shine.glide.GlideCircleTransform;
+import com.zyt.shine.ui.view.TwoBtnFragmentDialog;
 import com.zyt.shine.utils.ImmersedStatusbarUtils;
 
 import org.androidannotations.annotations.AfterViews;
@@ -95,8 +96,12 @@ public class LoginActivity extends AppCompatActivity {
     @Click(R.id.login_button)
     void loginClick() {
         //setHeadPortrait("http://img1.3lian.com/img2008/06/019/ych.jpg");
-        setHeadPortrait(inmUrl.get(i % inmUrl.size()));
-        i++;
+//        setHeadPortrait(inmUrl.get(i % inmUrl.size()));
+//        i++;
+
+        TwoBtnFragmentDialog dialog=new TwoBtnFragmentDialog();
+        dialog.setMsg("login").setTitle("title");
+        dialog.show(getFragmentManager(),"test");
     }
 
     /**

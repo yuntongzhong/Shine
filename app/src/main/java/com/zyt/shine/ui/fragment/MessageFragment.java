@@ -5,17 +5,14 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.zyt.shine.R;
-import com.zyt.shine.entity.NewsEntity;
 import com.zyt.shine.ui.view.AutoPlayViewPage;
-import com.zyt.shine.utils.DataUtils;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -25,31 +22,40 @@ import java.util.Random;
  */
 public class MessageFragment extends Fragment {
     private AutoPlayViewPage mImageCycleView;
-    SwipeRefreshLayout swipeRefreshLayout;
-    List<AutoPlayViewPage.ImageInfo> list;
-    List<AutoPlayViewPage.ImageInfo> listTest=new ArrayList<AutoPlayViewPage.ImageInfo>();
-    Random random = new Random();
-    boolean isTest=true;
-    private Handler mHandler = new Handler() {
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private List<AutoPlayViewPage.ImageInfo> list;
+    private List<AutoPlayViewPage.ImageInfo> listTest=new ArrayList<AutoPlayViewPage.ImageInfo>();
+    private Random random = new Random();
+    private boolean isTest=true;
+    private ResfreshHandler resfreshHandler;
+
+    public static class ResfreshHandler extends Handler {
+        WeakReference<MessageFragment> mFragmentWeakReference;
+
+        ResfreshHandler(MessageFragment messageFragment) {
+            mFragmentWeakReference = new WeakReference<MessageFragment>(messageFragment);
+        }
+
         @Override
         public void handleMessage(Message msg) {
-            super.handleMessage(msg);
+            MessageFragment theFragment = mFragmentWeakReference.get();
             switch (msg.what) {
                 case 1:
-                    if(isTest){
-                       mImageCycleView.notifyDataChanged(listTest);
-                    }else {
-                     mImageCycleView.notifyDataChanged(list);
-                    }
-                    isTest=!isTest;
-                    swipeRefreshLayout.setRefreshing(false);
-                    //swipeRefreshLayout.setEnabled(false);
-                    break;
-                default:
+                    theFragment.resfreshData();
                     break;
             }
         }
-    };
+    }
+    public void resfreshData() {
+        if(isTest){
+            mImageCycleView.notifyDataChanged(listTest);
+        }else {
+            mImageCycleView.notifyDataChanged(list);
+        }
+        isTest=!isTest;
+        swipeRefreshLayout.setRefreshing(false);
+        //swipeRefreshLayout.setEnabled(false);
+    }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -73,7 +79,7 @@ public class MessageFragment extends Fragment {
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                        mHandler.sendEmptyMessage(1);
+                        resfreshHandler.sendEmptyMessage(1);
                     }
                 }).start();
             }
@@ -83,6 +89,7 @@ public class MessageFragment extends Fragment {
     }
 
     private void initdata() {
+        resfreshHandler=new ResfreshHandler(this);
         list = new ArrayList<AutoPlayViewPage.ImageInfo>();
         //res图片资源
         list.add(new AutoPlayViewPage.ImageInfo(R.mipmap.b, "扑树又回来啦！再唱经典老歌引万人大合唱", ""));

@@ -11,11 +11,11 @@
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <com.zyt.shine.ui.view.AutoPlayViewPage
@@ -27,7 +27,6 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
                 android:padding="10dp"
                 android:orientation="vertical">
 
@@ -61,8 +60,6 @@
                     style="@style/BaseButton"
                     android:text="了解你想知道的资讯"/>
             </LinearLayout>
-
-
         </LinearLayout>
 
     </ScrollView>

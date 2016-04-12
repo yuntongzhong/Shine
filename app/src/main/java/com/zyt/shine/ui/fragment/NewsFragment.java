@@ -14,6 +14,7 @@ import android.widget.ListView;
 import com.zyt.shine.R;
 import com.zyt.shine.ui.view.AutoPlayViewPage;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,28 +25,36 @@ public class NewsFragment extends Fragment {
 
     private final long REFRESH_DELAY = 3000;
     private AutoPlayViewPage mImageCycleView;
-    SwipeRefreshLayout swipeRefreshLayout;
-    ArrayAdapter arrayAdapter;
-    ListView listView;
-    List<String> listString = new ArrayList<String>();
-    List<AutoPlayViewPage.ImageInfo> listImg = new ArrayList<AutoPlayViewPage.ImageInfo>();
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private ArrayAdapter arrayAdapter;
+    private ListView listView;
+    private List<String> listString = new ArrayList<String>();
+    private  List<AutoPlayViewPage.ImageInfo> listImg = new ArrayList<AutoPlayViewPage.ImageInfo>();
+    private ResfreshHandler resfreshHandler;
 
-    private Handler mHandler = new Handler() {
+    public static class ResfreshHandler extends Handler {
+        WeakReference<NewsFragment> mFragmentWeakReference;
+
+        ResfreshHandler(NewsFragment newsFragment) {
+            mFragmentWeakReference = new WeakReference<NewsFragment>(newsFragment);
+        }
+
         @Override
         public void handleMessage(Message msg) {
-            super.handleMessage(msg);
+            NewsFragment theFragment = mFragmentWeakReference.get();
             switch (msg.what) {
                 case 1:
-                    listString.add(msg.obj.toString());
-                    swipeRefreshLayout.setRefreshing(false);
-                    arrayAdapter.notifyDataSetChanged();
-                    //swipeRefreshLayout.setEnabled(false);
-                    break;
-                default:
+                    theFragment.resfreshData(msg);
                     break;
             }
         }
-    };
+    }
+    public void resfreshData(Message msg) {
+        listString.add(msg.obj.toString());
+        swipeRefreshLayout.setRefreshing(false);
+        arrayAdapter.notifyDataSetChanged();
+        //swipeRefreshLayout.setEnabled(false);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -80,10 +89,10 @@ public class NewsFragment extends Fragment {
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                        Message message = mHandler.obtainMessage();
+                        Message message = resfreshHandler.obtainMessage();
                         message.what = 1;
                         message.obj = "新增数据" + listString.size();
-                        mHandler.sendMessage(message);
+                        resfreshHandler.sendMessage(message);
                     }
                 }).start();
             }
@@ -91,6 +100,7 @@ public class NewsFragment extends Fragment {
     }
 
     void initdata() {
+        resfreshHandler=new ResfreshHandler(this);
         //res图片资源
         listImg.add(new AutoPlayViewPage.ImageInfo(R.mipmap.b, "扑树又回来啦！再唱经典老歌引万人大合唱", ""));
         listImg.add(new AutoPlayViewPage.ImageInfo(R.mipmap.c, "揭秘北京电影如何升级", ""));

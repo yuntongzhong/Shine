@@ -17,25 +17,21 @@ import com.zyt.shine.R;
 /**
  * Created by zyt on 2016/3/9.
  */
-public class PersonInfoActivity extends AppCompatActivity{
-    private CollapsingToolbarLayout collapsingToolbarLayout;
-    private Toolbar toolbar;
-    private ImageView bannner;
-
+public class PersonInfoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person_info);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        bannner = (ImageView) findViewById(R.id.bannner);
+        ImageView bannner = (ImageView) findViewById(R.id.bannner);
         //标题
-        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
         collapsingToolbarLayout.setTitle("个人资料");
         setStatusBarColorForKitkat(R.color.colorPrimaryDark);
 
-            Glide.with(this).load(R.mipmap.default_pic).diskCacheStrategy(DiskCacheStrategy.ALL).into(bannner);
-            collapsingToolbarLayout.setContentScrimColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        //Glide.with(this).load(R.mipmap.default_pic).diskCacheStrategy(DiskCacheStrategy.ALL).into(bannner);
+        //collapsingToolbarLayout.setContentScrimColor(ContextCompat.getColor(this, R.color.colorPrimary));
 //            setStatusBarColorForKitkat(R.color.colorPrimaryDark);
 
     }

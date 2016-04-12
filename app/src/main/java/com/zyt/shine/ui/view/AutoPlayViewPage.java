@@ -11,7 +11,6 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +31,7 @@ import java.util.List;
  * <p/>
  * <p>无限自动轮播控件AutoPlayViewPage</p>
  * <p>显示的页数应小于等于最大缓存页数的2倍，否则在刷新时会引发ANR异常</p>
- * <p>设置viewpage的最大缓存页数的方法为 mViewPager.setOffscreenPageLimit(5)</p>
+ * <p>设置Viewpage的最大缓存页数的方法为 mViewPager.setOffscreenPageLimit(5)</p>
  * <p>与swipeRefreshLayout同时同时使用时，使用setSwipeRefreshLayoutTouch()解决滑动冲突</p>
  */
 public class AutoPlayViewPage extends FrameLayout {
@@ -61,15 +60,7 @@ public class AutoPlayViewPage extends FrameLayout {
      * 轮播的总数
      */
     private int mCount = 0;
-    /**
-     * 指示器的尺寸（单位：PX）
-     * 后面会将px转成dp
-     */
-    private float indicationSize = 6.0f;
-    /**
-     * 指示器的左右边距（单位：PX）
-     */
-    private float indicationMargin = 1.5f;
+
     /**
      * 单击事件监听器
      */
@@ -151,14 +142,13 @@ public class AutoPlayViewPage extends FrameLayout {
      */
     private int getNearestIndication() {
         int current = mViewPager.getCurrentItem();//获取viewpage的当齐前位置
-        int currentIndex = current % mCount;//当前实际位置
-        int beforeIndex = currentIndex;//前面第一个的距离
+        int currentIndex = current % mCount;//当前实际位置,前面第一个的距离
         int afterIndex = mCount - currentIndex;//后面第一个的距离
         if (currentIndex == 0) {
             return current;
         }
-        if (beforeIndex <= afterIndex) {
-            current = current - beforeIndex;
+        if (currentIndex <= afterIndex) {
+            current = current - currentIndex;
         } else {
             current = current + afterIndex;
         }
@@ -230,7 +220,7 @@ public class AutoPlayViewPage extends FrameLayout {
      *
      * @param item
      */
-    public void setCurrentItem(int item) {
+    private void setCurrentItem(int item) {
         if (mViewPager != null) {
             mViewPager.setCurrentItem(item);
         }
@@ -260,6 +250,9 @@ public class AutoPlayViewPage extends FrameLayout {
      * 初始化指标器
      */
     private void initIndication() {
+        float indicationSize = 6.0f;// 指示器的尺寸（单位：PX）后面会将px转成dp
+        float indicationMargin = 1.5f; // 指示器的左右边距（单位：PX）
+
         mIndicationGroup.removeAllViews();
         for (int i = 0; i < mCount; i++) {
             ImageView imageView = new ImageView(mContext);

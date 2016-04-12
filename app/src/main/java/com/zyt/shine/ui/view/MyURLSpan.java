@@ -12,8 +12,8 @@ import android.widget.Toast;
  */
 public class MyURLSpan extends ClickableSpan{
 
-    String url;
-    Context mContext;
+    private String url;
+    private Context mContext;
 
     @Override
     public void updateDrawState(TextPaint ds) {

@@ -29,6 +29,7 @@
 
 
 
+
     <!--自动轮播下面的点的风格-->
     <style name="dot_style">
         <item name="android:layout_width">5dip</item>

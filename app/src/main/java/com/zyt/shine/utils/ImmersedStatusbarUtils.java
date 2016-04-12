@@ -2,7 +2,6 @@ package com.zyt.shine.utils;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.view.View;

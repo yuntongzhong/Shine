@@ -41,6 +41,7 @@ public class NewsRecyAdapter extends RecyclerView.Adapter<NewsRecyAdapter.NewsVi
         if(position==items.size()){
             holder.recyDivider.setVisibility(View.GONE);
         }
+
         final NewsEntity item = items.get(position);
         holder.time.setText(item.getReleaseTime());
         holder.name.setText(item.getName());

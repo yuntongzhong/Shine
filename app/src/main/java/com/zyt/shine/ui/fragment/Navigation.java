@@ -38,7 +38,7 @@ public enum Navigation {
     private int resIcon;
     private Class<?> clz;
 
-    private Navigation(int id, String name, int resIcon, Class<?> clz) {
+    Navigation(int id, String name, int resIcon, Class<?> clz) {
         this.id = id;
         this.name = name;
         this.resIcon = resIcon;
