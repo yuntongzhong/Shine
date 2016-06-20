@@ -8,10 +8,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.zyt.shine.R;
+import com.zyt.shine.bean.Example;
+import com.zyt.shine.bean.Weather;
 import com.zyt.shine.glide.GlideCircleTransform;
+import com.zyt.shine.network.RetrofitManager;
 import com.zyt.shine.ui.view.TwoBtnFragmentDialog;
 import com.zyt.shine.utils.ImmersedStatusbarUtils;
 
@@ -31,6 +35,11 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.observers.SafeSubscriber;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by zyt on 2015/11/20.
@@ -43,9 +52,9 @@ public class LoginActivity extends AppCompatActivity {
     Button loginBtn;
     @ViewById(R.id.myImage)
     ImageView icon;
-    //http://gaoxiao.jokeji.cn/GrapHtml/dongtai/20120921221658.htm
-    String url = "http://www.quanjing.com/imgbuy/488-0145.html";
-    List<String> inmUrl;
+    private String url = "http://img0.imgtn.bdimg.com/it/u=2294871039,3507383977&fm=206&gp=0.jpg";
+
+    private Subscription subscribe;
 
     @AfterViews
     protected void afterViews() {
@@ -54,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
         //设置是否有返回箭头
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("用户登录");
-        getHtmlStr(url);
+        setHeadPortrait(url);
     }
 
     @Click(R.id.myImage)
@@ -62,46 +71,41 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(new Intent(this, PersonInfoActivity.class));
     }
 
-    private void getHtmlStr(String url) {
-        //创建okHttpClient对象
-        OkHttpClient mOkHttpClient = new OkHttpClient();
-        //创建一个Request
-        final Request request = new Request.Builder()
-                .url(url)
-                .build();
-        mOkHttpClient.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String str = response.body().string();
-                Log.e("ingurl", "网页源码:" + str);
-                System.out.print(str);
-                inmUrl = getImgStr(str);
-                for (String url : inmUrl) {
-                    Log.e("ingurl", "url:" + url);
-                }
-            }
-        });
-    }
-
-    int i = 0;
 
     /**
      * 点击登录按钮
      */
     @Click(R.id.login_button)
     void loginClick() {
-        //setHeadPortrait("http://img1.3lian.com/img2008/06/019/ych.jpg");
-//        setHeadPortrait(inmUrl.get(i % inmUrl.size()));
-//        i++;
 
-        TwoBtnFragmentDialog dialog=new TwoBtnFragmentDialog();
-        dialog.setMsg("login").setTitle("title");
-        dialog.show(getFragmentManager(),"test");
+        getWeather();
+    }
+
+    void getWeather() {
+        Log.e("LoginActivity", "start");
+        //subscribe=
+        RetrofitManager.getApiService().getWeather("杭州")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Example>() {
+                    @Override
+                    public void onCompleted() {
+                        Log.e("LoginActivity", "onCompleted");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onNext(Example example) {
+                       String city= example.getData().getCity();
+                        String wendu=example.getData().getWendu();
+                        Toast.makeText(LoginActivity.this, city+":"+wendu, Toast.LENGTH_SHORT).show();
+                        Log.e("LoginActivity", city);
+                    }
+                });
     }
 
     /**
@@ -131,25 +135,5 @@ public class LoginActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public static List<String> getImgStr(String htmlStr) {
-        String img = "";
-        Pattern p_image;
-        Matcher m_image;
-        List<String> pics = new ArrayList<String>();
-
-        String regEx_img = "<img.*src=(.*?)[^>]*?>"; //图片链接地址
-        p_image = Pattern.compile
-                (regEx_img, Pattern.CASE_INSENSITIVE);
-        m_image = p_image.matcher(htmlStr);
-        while (m_image.find()) {
-            img = img + "," + m_image.group();
-            Matcher m = Pattern.compile("src=\"?(.*?)(\"|>|\\s+)").matcher(img); //匹配src
-            while (m.find()) {
-                pics.add(m.group(1));
-            }
-        }
-        return pics;
     }
 }

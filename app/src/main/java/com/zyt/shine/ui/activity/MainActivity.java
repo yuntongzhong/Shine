@@ -83,6 +83,11 @@ public class MainActivity extends AppCompatActivity
             tabSpec.setIndicator(getNavigationView(navigations[i]));
             mFragmentTabHost.addTab(tabSpec, navigations[i].getClz(), null);
         }
+
+        //去除底部按钮之间的分割线
+        if (android.os.Build.VERSION.SDK_INT > 10) {
+            mFragmentTabHost.getTabWidget().setShowDividers(0);
+        }
     }
 
     /**
@@ -99,20 +104,23 @@ public class MainActivity extends AppCompatActivity
         personalProfile.setText(loginInfo.getPersonalProfile());
 
         setText(personalProfile);
-        icon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                    drawerLayout.closeDrawer(GravityCompat.START);
-                }
-                Intent intent = new Intent(MainActivity.this, LoginActivity_.class);
-                startActivity(intent);
-            }
-        });
         Glide.with(this).load(loginInfo.getUserIcon())
                 .centerCrop()
                 .transform(new GlideCircleTransform(this))
                 .into(icon);
+        icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    //drawerLayout.closeDrawer(GravityCompat.START);
+                    drawerLayout.closeDrawer(navigationView);
+                }
+
+                Intent intent = new Intent(MainActivity.this, LoginActivity_.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     private void setText(TextView textView) {
