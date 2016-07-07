@@ -1,13 +1,18 @@
 package com.zyt.shine.ui.fragment;
 
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.zyt.shine.R;
 import com.zyt.shine.ui.view.AutoPlayViewPage;
@@ -25,9 +30,10 @@ public class MessageFragment extends Fragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private List<AutoPlayViewPage.ImageInfo> list;
     private List<AutoPlayViewPage.ImageInfo> listTest=new ArrayList<AutoPlayViewPage.ImageInfo>();
-    private Random random = new Random();
+    TextView textView;
     private boolean isTest=true;
     private ResfreshHandler resfreshHandler;
+    WindowManager windowManager;
 
     public static class ResfreshHandler extends Handler {
         WeakReference<MessageFragment> mFragmentWeakReference;
@@ -61,6 +67,8 @@ public class MessageFragment extends Fragment {
                              Bundle savedInstanceState) {
         ViewGroup messageLayout = (ViewGroup) inflater.inflate(R.layout.message_fragment,
                 container, false);
+        windowManager= getActivity().getWindowManager();
+        textView= (TextView) messageLayout.findViewById(R.id.text);
         mImageCycleView = (AutoPlayViewPage) messageLayout.findViewById(R.id.icv_topView);
         mImageCycleView.loadData(list);
         swipeRefreshLayout = (SwipeRefreshLayout) messageLayout.findViewById(R.id.msg_refresh);
@@ -85,6 +93,27 @@ public class MessageFragment extends Fragment {
             }
         });
         mImageCycleView.setSwipeRefreshLayoutTouch(swipeRefreshLayout);
+        final ImageView imageView=new ImageView(getActivity().getApplication());
+        imageView.setImageResource(R.mipmap.b);
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if( imageView.isShown()){
+                    windowManager.removeView(imageView);
+                    Log.e("imageView","is show");
+                }else {
+                    windowManager.addView(
+                                    imageView,
+                                    new WindowManager.LayoutParams(
+                                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                                            WindowManager.LayoutParams.TYPE_APPLICATION,
+                                            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                                                    | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                                            PixelFormat.TRANSLUCENT));
+                }
+            }
+        });
         return messageLayout;
     }
 
