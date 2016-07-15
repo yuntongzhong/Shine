@@ -85,7 +85,7 @@ public class NewsRecyAdapter extends RecyclerView.Adapter<NewsRecyAdapter.NewsVi
             name = (TextView) itemView.findViewById(R.id.user_name);
             time = (TextView) itemView.findViewById(R.id.release_time);
             msg = (TextView) itemView.findViewById(R.id.msg_content);
-            recyDivider=itemView.findViewById(R.id.recy_divider);
+            //recyDivider=itemView.findViewById(R.id.recy_divider);
         }
        public View getParentView(){
            return parentView;

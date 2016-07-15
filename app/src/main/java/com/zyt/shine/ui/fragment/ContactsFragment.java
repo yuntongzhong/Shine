@@ -17,6 +17,7 @@ import com.zyt.shine.entity.NewsEntity;
 import com.zyt.shine.ui.adapter.Bookends;
 import com.zyt.shine.ui.adapter.NewsRecyAdapter;
 import com.zyt.shine.ui.view.AutoPlayViewPage;
+import com.zyt.shine.ui.view.DividerItemDecoration;
 import com.zyt.shine.utils.DataUtils;
 
 import java.lang.ref.WeakReference;
@@ -84,7 +85,6 @@ public class ContactsFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         newsRecyAdapter = new NewsRecyAdapter(getContext(), list, R.layout.news_fragment_item);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        // recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         mBookends = new Bookends<>(newsRecyAdapter);
 
@@ -100,6 +100,13 @@ public class ContactsFragment extends Fragment {
         mBookends.addHeader(headerGroup);
 //        recyclerView.setAdapter(newsRecyAdapter);
         recyclerView.setAdapter(mBookends);
+
+
+        // recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        //recyclerView
+        recyclerView.addItemDecoration(new DividerItemDecoration(
+                getActivity(), DividerItemDecoration.VERTICAL_LIST));
 
         swipeRefreshLayout = (SwipeRefreshLayout) contactsLayout.findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark,

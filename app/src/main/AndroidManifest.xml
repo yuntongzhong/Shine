@@ -13,7 +13,7 @@
         android:theme="@style/AppBaseTheme">
         <meta-data
             android:name="com.zyt.shine.glide.GlideModuleImpl"
-            android:value="Gl  ideModule" />
+            android:value="GlideModule" />
 
         <activity
             android:name=".ui.activity.MainActivity"
