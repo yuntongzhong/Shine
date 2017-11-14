@@ -118,6 +118,7 @@ public class LoginActivity extends AppCompatActivity {
                 .into(icon);
         System.out.println("test");
         System.out.println("test2");
+        //112344
     }
 
     @Override
