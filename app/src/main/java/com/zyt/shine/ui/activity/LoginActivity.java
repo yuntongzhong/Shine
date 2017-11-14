@@ -116,6 +116,7 @@ public class LoginActivity extends AppCompatActivity {
                 .centerCrop()
                 .transform(new GlideCircleTransform(this))
                 .into(icon);
+        System.out.println("test");
     }
 
     @Override
